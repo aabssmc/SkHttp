@@ -5,8 +5,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
+import java.net.http.HttpResponse;
 
 public final class SkHttp extends JavaPlugin {
+
+    public static HttpResponse<?> LAST_RESPONSE;
 
     @Override
     public void onEnable() {
@@ -21,7 +24,7 @@ public final class SkHttp extends JavaPlugin {
                 throw new RuntimeException(e);
             }
         } else{
-            getLogger().severe("Skript not found! Please add skript");
+            getLogger().severe("Skript not found! Please add Skript.");
             getPluginLoader().disablePlugin(this);
         }
     }

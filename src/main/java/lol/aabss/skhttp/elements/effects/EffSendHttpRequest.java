@@ -21,6 +21,8 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.concurrent.ExecutionException;
 
+import static lol.aabss.skhttp.SkHttp.LAST_RESPONSE;
+
 @Name("Send Http Request")
 @Description("Sends a optionally async request.")
 @Examples({
@@ -52,18 +54,17 @@ public class EffSendHttpRequest extends Effect {
                 if (client != null) {
                     HttpRequest request = this.request.getSingle(e);
                     if (request != null) {
+                        HttpResponse<?> response;
                         if (async) {
-                            var.change(e,
-                                    new HttpResponse[]{client.sendAsync(request, HttpResponse.BodyHandlers.ofString()).get()},
-                                    Changer.ChangeMode.SET
-                            );
-                            client.sendAsync(request, HttpResponse.BodyHandlers.ofString());
+                            response = client.sendAsync(request, HttpResponse.BodyHandlers.ofString()).get();
                         } else {
-                            var.change(e,
-                                    new HttpResponse[]{client.send(request, HttpResponse.BodyHandlers.ofString())},
-                                    Changer.ChangeMode.SET
-                            );
+                            response = client.send(request, HttpResponse.BodyHandlers.ofString());
                         }
+                        var.change(e,
+                                new HttpResponse[]{response},
+                                Changer.ChangeMode.SET
+                        );
+                        LAST_RESPONSE = response;
                     }
                 }
             }

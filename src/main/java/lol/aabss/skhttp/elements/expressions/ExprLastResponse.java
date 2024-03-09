@@ -14,25 +14,27 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.net.http.HttpClient;
+import java.net.http.HttpResponse;
 
-@Name("New HTTP Client")
-@Description("Returns a new HTTP client.")
+import static lol.aabss.skhttp.SkHttp.LAST_RESPONSE;
+
+@Name("Last Http Response")
+@Description("Returns the last http response.")
 @Examples({
-        "set {_c} to a new http client."
+        "set {_r} to last response"
 })
 @Since("1.0")
-public class ExprHttpClient extends SimpleExpression<HttpClient> {
+public class ExprLastResponse extends SimpleExpression<HttpResponse> {
 
     static {
-        Skript.registerExpression(ExprHttpClient.class, HttpClient.class, ExpressionType.SIMPLE,
-                "[a] [new] [empty] http client"
+        Skript.registerExpression(ExprLastResponse.class, HttpResponse.class, ExpressionType.SIMPLE,
+                "[the] last [http] response"
         );
     }
 
     @Override
-    protected HttpClient @NotNull [] get(@NotNull Event e) {
-        return new HttpClient[]{HttpClient.newHttpClient()};
+    protected HttpResponse<?> @NotNull [] get(@NotNull Event e) {
+        return new HttpResponse[]{LAST_RESPONSE};
     }
 
     @Override
@@ -41,13 +43,13 @@ public class ExprHttpClient extends SimpleExpression<HttpClient> {
     }
 
     @Override
-    public @NotNull Class<? extends HttpClient> getReturnType() {
-        return HttpClient.class;
+    public @NotNull Class<? extends HttpResponse<?>> getReturnType() {
+        return (Class<? extends HttpResponse<?>>) HttpResponse.class;
     }
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean debug) {
-        return "new http client";
+        return "last response";
     }
 
     @Override
