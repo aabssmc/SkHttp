@@ -39,8 +39,8 @@ public class ExprPreviousResponse extends PropertyExpression<HttpResponse<String
     }
 
     @Override
-    public @NotNull Class<? extends HttpResponse<?>> getReturnType() {
-        return (Class<? extends HttpResponse<?>>) HttpResponse.class;
+    public @NotNull Class<? extends HttpResponse> getReturnType() {
+        return HttpResponse.class;
     }
 
     @Override
