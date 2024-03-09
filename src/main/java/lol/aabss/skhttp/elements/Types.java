@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 
 public class Types {
     static {
@@ -59,7 +60,7 @@ public class Types {
                 )
         );
 
-        Classes.registerClass(new ClassInfo<>(HttpRequest.class, "httpresponse")
+        Classes.registerClass(new ClassInfo<>(HttpResponse.class, "httpresponse")
                 .name("Http Response")
                 .description("Represents an http response.")
                 .user("http ?requests?")
@@ -72,13 +73,13 @@ public class Types {
                             }
 
                             @Override
-                            public @NotNull String toString(HttpRequest o, int flags) {
+                            public @NotNull String toString(HttpResponse o, int flags) {
                                 return toVariableNameString(o);
                             }
 
                             @Override
-                            public @NotNull String toVariableNameString(HttpRequest o) {
-                                return "http request";
+                            public @NotNull String toVariableNameString(HttpResponse o) {
+                                return "http response";
                             }
                         }
                 )

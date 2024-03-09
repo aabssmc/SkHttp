@@ -46,7 +46,7 @@ public class SecRequestBuilder extends Section {
 
     static {
         Skript.registerSection(SecRequestBuilder.class,
-                "[a] [new] http request [builder]"
+                "http request [builder]"
         );
         ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("url", null, false, String.class));
         ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("method", null, false, String.class));
@@ -64,10 +64,8 @@ public class SecRequestBuilder extends Section {
         this.method = (Expression<String>) container.getOptional("method", false);
         if (this.method == null) return false;
         this.body = (Expression<String>) container.getOptional("body", false);
-        if (this.body == null) return false;
         this.headers = (Expression<String>) container.getOptional("headers", false);
-        if (this.headers == null) return false;
-        var = (Variable<?>) container.getOptional("variable", false);
+        this.var = (Variable<?>) container.getOptional("variable", false);
         return var != null;
     }
 
