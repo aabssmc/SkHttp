@@ -14,8 +14,6 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.text.Style;
-
 @Name("Send Discord Webhook")
 @Description("Sends strings to a discord webhook.")
 @Examples({
