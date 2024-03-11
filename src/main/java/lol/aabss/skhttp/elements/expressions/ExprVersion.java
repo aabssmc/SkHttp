@@ -27,7 +27,7 @@ import java.util.List;
 public class ExprVersion extends PropertyExpression<Object, String> {
 
     static {
-        register(ExprVersion.class, String.class, "[repsonse|request] ur(l|i)", "httpresponses/httprequests/httpclients");
+        register(ExprVersion.class, String.class, "[repsonse|request] version", "httpresponses/httprequests/httpclients");
     }
 
     @Override

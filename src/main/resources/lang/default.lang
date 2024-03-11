@@ -1,0 +1,12 @@
+version: 1.1
+
+types:
+    httpclient: httpclient¦s @an
+    httprequest: httprequest¦s @an
+    httpresponse: httpresposne¦s @an
+    discordwebhook: discordwebhook¦s @a
+
+    discordembed: discordembed¦s @a
+    discordfooter: discordfooter¦s @a
+    discordauthor: discordauthor¦s @a
+    discordfield: discordfiled¦s @a

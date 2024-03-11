@@ -32,6 +32,7 @@ import java.util.List;
         "\turl: \"https://www.someurl.com\"",
         "\tmethod: \"GET\"",
         "\tbody: \"some body text\"",
+        "\theaders: \"some header texts\"",
         "\tvariable: {_var}"
 })
 @Since("1.0")
