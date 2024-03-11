@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 @Name("Send Discord Webhook")
 @Description("Sends strings to a discord webhook.")
 @Examples({
-        "send \"ok 123\" to discord webhook with url \"https://discord.com/something\"
+        "send \"ok 123\" to discord webhook with url \"https://discord.com/something\""
 })
 @Since("1.1")
 public class EffSendDiscordWebhook extends Effect {
