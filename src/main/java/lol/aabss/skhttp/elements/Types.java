@@ -4,11 +4,11 @@ import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
-import com.itsradiix.DiscordWebHookMessage;
-import com.itsradiix.embed.Embed;
-import com.itsradiix.embed.models.Author;
-import com.itsradiix.embed.models.Field;
-import com.itsradiix.embed.models.Footer;
+import com.itsradiix.discordwebhook.DiscordWebHook;
+import com.itsradiix.discordwebhook.embed.Embed;
+import com.itsradiix.discordwebhook.embed.models.Author;
+import com.itsradiix.discordwebhook.embed.models.Field;
+import com.itsradiix.discordwebhook.embed.models.Footer;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.http.HttpClient;
@@ -90,7 +90,7 @@ public class Types {
                 )
         );
 
-        Classes.registerClass(new ClassInfo<>(DiscordWebHookMessage.class, "discordwebhook")
+        Classes.registerClass(new ClassInfo<>(DiscordWebHook.class, "discordwebhook")
                 .name("Discord Webhook")
                 .description("Represents a discord webhook.")
                 .user("discord ?webhooks?")
@@ -103,12 +103,12 @@ public class Types {
                             }
 
                             @Override
-                            public @NotNull String toString(DiscordWebHookMessage o, int flags) {
+                            public @NotNull String toString(DiscordWebHook o, int flags) {
                                 return toVariableNameString(o);
                             }
 
                             @Override
-                            public @NotNull String toVariableNameString(DiscordWebHookMessage o) {
+                            public @NotNull String toVariableNameString(DiscordWebHook o) {
                                 return o.getContent();
                             }
                         }

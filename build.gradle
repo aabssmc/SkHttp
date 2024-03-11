@@ -11,6 +11,7 @@ repositories {
     maven {url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"}
     maven {url = "https://oss.sonatype.org/content/groups/public/"}
     maven {url = "https://repo.skriptlang.org/releases"}
+    maven {url = "https://jitpack.io"}
 }
 
 dependencies {
@@ -18,13 +19,13 @@ dependencies {
     compileOnly "org.spigotmc:spigot-api:1.20.4-R0.1-SNAPSHOT"
     implementation "com.github.SkriptLang:Skript:2.7.0"
     implementation "org.json:json:20231013"
-    compileOnly files("libs/Definity-Webhooks-1.0.jar")
-
+    implementation "com.github.ItsRadiiX:Definity-Webhooks:f051e1fa3e"
 }
 
 shadowJar {
     dependencies {
         include(dependency("org.json:json:20231013"))
+        include(dependency("com.github.ItsRadiiX:Definity-Webhooks:f051e1fa3e"))
     }
 }
 

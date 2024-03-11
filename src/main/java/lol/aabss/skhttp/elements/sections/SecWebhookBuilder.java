@@ -9,8 +9,8 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.*;
 import ch.njol.util.Kleenean;
-import com.itsradiix.DiscordWebHookMessage;
-import com.itsradiix.embed.Embed;
+import com.itsradiix.discordwebhook.DiscordWebHook;
+import com.itsradiix.discordwebhook.embed.Embed;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -41,7 +41,7 @@ public class SecWebhookBuilder extends Section {
     private Variable<?> var;
 
     static {
-        Skript.registerSection(SecRequestBuilder.class,
+        Skript.registerSection(SecWebhookBuilder.class,
                 "discord webhook [builder]"
         );
         ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("content", null, false, String.class));
@@ -75,7 +75,7 @@ public class SecWebhookBuilder extends Section {
         if (var == null) {
             return;
         }
-        DiscordWebHookMessage.Builder builder = new DiscordWebHookMessage.Builder();
+        DiscordWebHook.Builder builder = new DiscordWebHook.Builder();
         String content = this.content.getSingle(e);
         if (content != null){
             builder = builder.content(content);
@@ -98,7 +98,7 @@ public class SecWebhookBuilder extends Section {
                 builder = builder.embed(embed);
             }
         }
-        var.change(e, new DiscordWebHookMessage[]{builder.build()}, Changer.ChangeMode.SET);
+        var.change(e, new DiscordWebHook[]{builder.build()}, Changer.ChangeMode.SET);
     }
 
     @Override

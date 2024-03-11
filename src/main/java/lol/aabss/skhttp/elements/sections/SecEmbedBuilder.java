@@ -9,10 +9,10 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.*;
 import ch.njol.util.Kleenean;
-import com.itsradiix.embed.Embed;
-import com.itsradiix.embed.models.Author;
-import com.itsradiix.embed.models.Field;
-import com.itsradiix.embed.models.Footer;
+import com.itsradiix.discordwebhook.embed.Embed;
+import com.itsradiix.discordwebhook.embed.models.Author;
+import com.itsradiix.discordwebhook.embed.models.Field;
+import com.itsradiix.discordwebhook.embed.models.Footer;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -55,7 +55,7 @@ public class SecEmbedBuilder extends Section {
     private Variable<?> var;
 
     static {
-        Skript.registerSection(SecRequestBuilder.class,
+        Skript.registerSection(SecEmbedBuilder.class,
                 "discord [webhook] embed [builder]"
         );
         ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("title", null, true, String.class));
