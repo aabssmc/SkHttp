@@ -1,5 +1,7 @@
 # **SkHttp**
 
+[![SkriptHubViewTheDocs](http://skripthub.net/static/addon/ViewTheDocsButton.png)](http://skripthub.net/docs/?addon=SkHttp)
+
 
 *You need *[*Skript 2.7.0*](https://github.com/SkriptLang/Skript)* and up to use.*
 
