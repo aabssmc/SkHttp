@@ -53,6 +53,8 @@ public class SecRequestBuilder extends Section {
         ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("body", null, true, String.class));
         ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("headers", null, true, String[].class));
         ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("variable", null, false, Object.class));
+        // (create|make) [a] [new] http request using [url] %string% and [with] [method] %string% [and [with] [header[s]] %-strings%] [and [body] %-string%] (then|and) store it in %object%
+        // (create|make) [a] [new] http request using [url] %string% and [with] [method] %string% [and [body] %-string%] [and [with] [header[s]] %-strings%] (then|and) store it in %object%
     }
 
     @Override

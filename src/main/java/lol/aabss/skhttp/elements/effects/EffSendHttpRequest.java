@@ -34,7 +34,7 @@ public class EffSendHttpRequest extends Effect {
 
     static {
         Skript.registerEffect(EffSendHttpRequest.class,
-                "send [[:a]sync] [http] request using [client] %httpclient% and [request] %httprequest% " +
+                "(send|post) [[:a]sync] [http] request using [client] %httpclient% and [request] %httprequest% " +
                         "(and|then) store (the response|it) in %object%"
         );
     }
