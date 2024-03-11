@@ -9,7 +9,7 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
-import com.itsradiix.discordwebhook.DiscordWebHook;
+import com.itsradiix.DiscordWebHookMessage;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -38,12 +38,12 @@ public class EffSendDiscordWebhook extends Effect {
             if (url != null) {
                 Object text = this.text.getSingle(e);
                 if (text instanceof String t) {
-                    DiscordWebHook message = new DiscordWebHook.Builder()
+                    DiscordWebHookMessage message = new DiscordWebHookMessage.Builder()
                             .content(t)
                             .build();
-                    DiscordWebHook.sendMessage(url, message);
-                } else if (text instanceof DiscordWebHook t){
-                    DiscordWebHook.sendMessage(url, t);
+                    DiscordWebHookMessage.sendMessage(url, message);
+                } else if (text instanceof DiscordWebHookMessage t){
+                    DiscordWebHookMessage.sendMessage(url, t);
                 }
             }
         }

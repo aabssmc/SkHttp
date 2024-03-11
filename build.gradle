@@ -1,23 +1,31 @@
 plugins {
     id 'java'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
 group = 'lol.aabss'
-version = '1.0'
+version = '1.1'
 
 repositories {
     mavenCentral()
     maven {url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"}
     maven {url = "https://oss.sonatype.org/content/groups/public/"}
     maven {url = "https://repo.skriptlang.org/releases"}
-    maven {url = "https://jitpack.io"}
 }
 
 dependencies {
     implementation "org.jetbrains:annotations:24.0.0"
     compileOnly "org.spigotmc:spigot-api:1.20.4-R0.1-SNAPSHOT"
     implementation "com.github.SkriptLang:Skript:2.7.0"
-    implementation "com.github.ItsRadiiX:Definity-Webhooks:f051e1fa3e"
+    implementation "org.json:json:20231013"
+    compileOnly files("libs/Definity-Webhooks-1.0.jar")
+
+}
+
+shadowJar {
+    dependencies {
+        include(dependency("org.json:json:20231013"))
+    }
 }
 
 def targetJavaVersion = 17
