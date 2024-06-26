@@ -16,7 +16,7 @@ repositories {
 
 dependencies {
     implementation "org.jetbrains:annotations:24.0.0"
-    compileOnly "org.spigotmc:spigot-api:1.20.6-R0.1-SNAPSHOT"
+    compileOnly "org.spigotmc:spigot-api:1.21-R0.1-SNAPSHOT"
     implementation "com.github.SkriptLang:Skript:2.7.0"
     implementation "com.github.ItsRadiiX:Definity-Webhooks:f051e1fa3e"
 }
