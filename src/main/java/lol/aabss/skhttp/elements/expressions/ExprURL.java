@@ -8,6 +8,7 @@ import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
+import lol.aabss.skhttp.objects.RequestObject;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -35,8 +36,8 @@ public class ExprURL extends PropertyExpression<Object, String> {
         for (Object response : source){
             if (response instanceof HttpResponse<?>) {
                 urls.add(((HttpResponse<?>) response).uri().toString());
-            } else if (response instanceof HttpRequest){
-                urls.add(((HttpRequest) response).uri().toString());
+            } else if (response instanceof RequestObject){
+                urls.add(((RequestObject) response).request.uri().toString());
             }
         }
         return urls.toArray(String[]::new);

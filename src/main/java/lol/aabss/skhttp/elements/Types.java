@@ -9,6 +9,7 @@ import com.itsradiix.discordwebhook.embed.Embed;
 import com.itsradiix.discordwebhook.embed.models.Author;
 import com.itsradiix.discordwebhook.embed.models.Field;
 import com.itsradiix.discordwebhook.embed.models.Footer;
+import lol.aabss.skhttp.objects.RequestObject;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.http.HttpClient;
@@ -40,7 +41,7 @@ public class Types {
                 )
         );
 
-        Classes.registerClass(new ClassInfo<>(HttpRequest.class, "httprequest")
+        Classes.registerClass(new ClassInfo<>(RequestObject.class, "httprequest")
                 .name("Http Request")
                 .description("Represents an http request.")
                 .user("http ?requests?")
@@ -53,13 +54,13 @@ public class Types {
                             }
 
                             @Override
-                            public @NotNull String toString(HttpRequest o, int flags) {
+                            public @NotNull String toString(RequestObject o, int flags) {
                                 return toVariableNameString(o);
                             }
 
                             @Override
-                            public @NotNull String toVariableNameString(HttpRequest o) {
-                                return "http request";
+                            public @NotNull String toVariableNameString(RequestObject o) {
+                                return o.request.uri().toString();
                             }
                         }
                 )

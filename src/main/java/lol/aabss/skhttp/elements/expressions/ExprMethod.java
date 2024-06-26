@@ -8,6 +8,7 @@ import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
+import lol.aabss.skhttp.objects.RequestObject;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -22,18 +23,19 @@ import java.util.List;
         "send method of {_r}"
 })
 @Since("1.0")
-public class ExprMethod extends PropertyExpression<HttpRequest, String> {
+public class ExprMethod extends PropertyExpression<RequestObject, String> {
 
     static {
         register(ExprMethod.class, String.class, "[request] method", "httprequests");
     }
 
     @Override
-    protected String @NotNull [] get(@NotNull Event event, HttpRequest @NotNull [] source) {
+    protected String @NotNull [] get(@NotNull Event event, RequestObject @NotNull [] source) {
         List<String> methods = new ArrayList<>();
-        for (HttpRequest response : source){
-            if (response != null){
-                methods.add(response.method());
+        for (RequestObject requestObject : source){
+            HttpRequest request = requestObject.request;
+            if (request != null){
+                methods.add(request.method());
             }
         }
         return methods.toArray(String[]::new);
@@ -51,7 +53,7 @@ public class ExprMethod extends PropertyExpression<HttpRequest, String> {
 
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, @NotNull Kleenean isDelayed, SkriptParser.@NotNull ParseResult parseResult) {
-        setExpr((Expression<? extends HttpRequest>) exprs[0]);
+        setExpr((Expression<? extends RequestObject>) exprs[0]);
         return true;
     }
 }

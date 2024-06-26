@@ -11,6 +11,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.Variable;
 import ch.njol.util.Kleenean;
+import lol.aabss.skhttp.objects.RequestObject;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -34,13 +35,13 @@ public class EffSendHttpRequest extends Effect {
 
     static {
         Skript.registerEffect(EffSendHttpRequest.class,
-                "(send|post) [[:a]sync] [http] request using [client] %httpclient% and [request] %httprequest% " +
+                "(send|post) [http] request using [client] %httpclient% and [request] %httprequest% " +
                         "(and|then) store (the response|it) in %object%"
         );
     }
 
     private Expression<HttpClient> client;
-    private Expression<HttpRequest> request;
+    private Expression<RequestObject> request;
     private Variable<?> var;
     private boolean async;
 
@@ -52,13 +53,26 @@ public class EffSendHttpRequest extends Effect {
             if (var != null) {
                 HttpClient client = this.client.getSingle(e);
                 if (client != null) {
-                    HttpRequest request = this.request.getSingle(e);
-                    if (request != null) {
+                    RequestObject requestObject = this.request.getSingle(e);
+                    if (requestObject != null) {
+                        HttpRequest request = requestObject.request;
                         HttpResponse<?> response;
+                        HttpResponse.BodyHandler<?> handler = HttpResponse.BodyHandlers.ofString();
+                        if (requestObject.type != null) {
+                            handler = switch (RequestObject.RequestType.valueOf(requestObject.type.toUpperCase())) {
+                                case BYTES -> HttpResponse.BodyHandlers.ofByteArray();
+                                case PATH, FILE -> {
+                                    assert requestObject.path != null;
+                                    yield HttpResponse.BodyHandlers.ofFile(requestObject.path);
+                                }
+                                case INPUTSTREAM, INPUTSTREAMSUPPLIER -> HttpResponse.BodyHandlers.ofInputStream();
+                                default -> HttpResponse.BodyHandlers.ofString();
+                            };
+                        }
                         if (async) {
-                            response = client.sendAsync(request, HttpResponse.BodyHandlers.ofString()).get();
+                            response = client.sendAsync(request, handler).get();
                         } else {
-                            response = client.send(request, HttpResponse.BodyHandlers.ofString());
+                            response = client.send(request, handler);
                         }
                         var.change(e,
                                 new HttpResponse[]{response},
@@ -82,7 +96,7 @@ public class EffSendHttpRequest extends Effect {
     public boolean init(Expression<?>[] exprs, int matchedPattern, @NotNull Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
         async = parseResult.hasTag("a");
         client = (Expression<HttpClient>) exprs[0];
-        request = (Expression<HttpRequest>) exprs[1];
+        request = (Expression<RequestObject>) exprs[1];
         var = (Variable<?>) exprs[2];
         return true;
     }

@@ -8,6 +8,7 @@ import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
+import lol.aabss.skhttp.objects.RequestObject;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -36,8 +37,8 @@ public class ExprVersion extends PropertyExpression<Object, String> {
         for (Object response : source){
             if (response instanceof HttpResponse<?>) {
                 versions.add(((HttpResponse<?>) response).version().name().toLowerCase());
-            } else if (response instanceof HttpRequest){
-                versions.add(((HttpRequest) response).version().get().name().toLowerCase());
+            } else if (response instanceof RequestObject){
+                versions.add(((RequestObject) response).request.version().get().name().toLowerCase());
             } else if (response instanceof HttpClient){
                 versions.add(((HttpClient) response).version().name().toLowerCase());
             }

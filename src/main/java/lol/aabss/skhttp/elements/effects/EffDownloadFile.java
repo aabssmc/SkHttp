@@ -9,6 +9,7 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
+import lol.aabss.skhttp.objects.RequestObject;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
@@ -58,8 +59,8 @@ public class EffDownloadFile extends Effect {
             try {
                 if (urlString instanceof HttpResponse<?>) {
                     url = ((HttpResponse<?>) urlString).uri().toURL();
-                } else if (urlString instanceof HttpRequest) {
-                    url = ((HttpRequest) urlString).uri().toURL();
+                } else if (urlString instanceof RequestObject) {
+                    url = ((RequestObject) urlString).request.uri().toURL();
                 } else if (urlString instanceof String) {
                     url = new URL((String) urlString);
                 } else {
