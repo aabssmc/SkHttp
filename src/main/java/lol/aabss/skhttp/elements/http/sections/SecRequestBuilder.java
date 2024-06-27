@@ -1,4 +1,4 @@
-package lol.aabss.skhttp.elements.sections;
+package lol.aabss.skhttp.elements.http.sections;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer;
@@ -26,7 +26,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpRequest;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;

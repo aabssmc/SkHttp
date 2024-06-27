@@ -1,4 +1,4 @@
-package lol.aabss.skhttp.elements.expressions;
+package lol.aabss.skhttp.elements.http.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
@@ -10,7 +10,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
-import lol.aabss.skhttp.elements.sections.SecSendAsyncHttpRequest;
+import lol.aabss.skhttp.elements.http.sections.SecSendAsyncHttpRequest;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 

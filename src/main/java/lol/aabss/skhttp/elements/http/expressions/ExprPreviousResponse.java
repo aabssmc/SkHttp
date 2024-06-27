@@ -1,4 +1,4 @@
-package lol.aabss.skhttp.elements.expressions;
+package lol.aabss.skhttp.elements.http.expressions;
 
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -12,40 +12,40 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
 
-@Name("Response Body")
-@Description("Returns the body of a response.")
+
+@Name("Previous HTTP Response")
+@Description("Returns the previous HTTP response of another httpresponse.")
 @Examples({
-        "send body of {_r}"
+        "set {_r} to previous response of last response"
 })
 @Since("1.0")
-public class ExprBody extends PropertyExpression<HttpResponse<String>, String> {
+public class ExprPreviousResponse extends PropertyExpression<HttpResponse<String>, HttpResponse> {
 
     static {
-        register(ExprBody.class, String.class, "[response] body", "httpresponses");
+        register(ExprPreviousResponse.class, HttpResponse.class, "previous [http] response", "httpresponses");
     }
 
     @Override
-    protected String @NotNull [] get(@NotNull Event event, HttpResponse<String> @NotNull [] source) {
-        List<String> bodys = new ArrayList<>();
-        for (HttpResponse<String> response : source){
-            bodys.add(response.body());
+    protected HttpResponse<?> @NotNull [] get(@NotNull Event event, HttpResponse<String> @NotNull [] source) {
+        List<HttpResponse<?>> responses = new ArrayList<>();
+        for (HttpResponse<?> response : source){
+            responses.add(response.previousResponse().get());
         }
-        return bodys.toArray(String[]::new);
+        return responses.toArray(HttpResponse<?>[]::new);
     }
 
     @Override
-    public @NotNull Class<? extends String> getReturnType() {
-        return String.class;
+    public @NotNull Class<? extends HttpResponse> getReturnType() {
+        return HttpResponse.class;
     }
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean debug) {
-        return "body";
+        return "previous responses";
     }
 
     @Override

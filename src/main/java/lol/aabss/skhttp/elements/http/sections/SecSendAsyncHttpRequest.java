@@ -1,4 +1,4 @@
-package lol.aabss.skhttp.elements.sections;
+package lol.aabss.skhttp.elements.http.sections;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.config.SectionNode;

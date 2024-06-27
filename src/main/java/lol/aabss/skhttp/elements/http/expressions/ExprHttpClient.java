@@ -1,4 +1,4 @@
-package lol.aabss.skhttp.elements.expressions;
+package lol.aabss.skhttp.elements.http.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;

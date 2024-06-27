@@ -1,4 +1,4 @@
-package lol.aabss.skhttp.elements.expressions;
+package lol.aabss.skhttp.elements.http.expressions;
 
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -8,37 +8,33 @@ import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
-import lol.aabss.skhttp.objects.RequestObject;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
 
-@Name("Http Method")
-@Description("Returns the method of a http request.")
+@Name("Response Body")
+@Description("Returns the body of a response.")
 @Examples({
-        "send method of {_r}"
+        "send body of {_r}"
 })
 @Since("1.0")
-public class ExprMethod extends PropertyExpression<RequestObject, String> {
+public class ExprBody extends PropertyExpression<HttpResponse<String>, String> {
 
     static {
-        register(ExprMethod.class, String.class, "[request] method", "httprequests");
+        register(ExprBody.class, String.class, "[response] body", "httpresponses");
     }
 
     @Override
-    protected String @NotNull [] get(@NotNull Event event, RequestObject @NotNull [] source) {
-        List<String> methods = new ArrayList<>();
-        for (RequestObject requestObject : source){
-            HttpRequest request = requestObject.request;
-            if (request != null){
-                methods.add(request.method());
-            }
+    protected String @NotNull [] get(@NotNull Event event, HttpResponse<String> @NotNull [] source) {
+        List<String> bodys = new ArrayList<>();
+        for (HttpResponse<String> response : source){
+            bodys.add(response.body());
         }
-        return methods.toArray(String[]::new);
+        return bodys.toArray(String[]::new);
     }
 
     @Override
@@ -48,12 +44,12 @@ public class ExprMethod extends PropertyExpression<RequestObject, String> {
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean debug) {
-        return "method";
+        return "body";
     }
 
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, @NotNull Kleenean isDelayed, SkriptParser.@NotNull ParseResult parseResult) {
-        setExpr((Expression<? extends RequestObject>) exprs[0]);
+        setExpr((Expression<? extends HttpResponse<String>>) exprs[0]);
         return true;
     }
 }

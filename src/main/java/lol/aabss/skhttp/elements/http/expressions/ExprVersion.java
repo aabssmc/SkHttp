@@ -1,4 +1,4 @@
-package lol.aabss.skhttp.elements.expressions;
+package lol.aabss.skhttp.elements.http.expressions;
 
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -13,34 +13,36 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.net.http.HttpRequest;
+import java.net.http.HttpClient;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
 
-@Name("Http Url")
-@Description("Returns the url of a http response or request.")
+@Name("Http Version")
+@Description("Returns the version of a http response, request or client.")
 @Examples({
-        "send url of {_r}"
+        "send version of {_r}"
 })
 @Since("1.0")
-public class ExprURL extends PropertyExpression<Object, String> {
+public class ExprVersion extends PropertyExpression<Object, String> {
 
     static {
-        register(ExprURL.class, String.class, "[repsonse|request] ur(l|i)", "httpresponses/httprequests");
+        register(ExprVersion.class, String.class, "[repsonse|request] version", "httpresponses/httprequests/httpclients");
     }
 
     @Override
     protected String @NotNull [] get(@NotNull Event event, Object @NotNull [] source) {
-        List<String> urls = new ArrayList<>();
+        List<String> versions = new ArrayList<>();
         for (Object response : source){
             if (response instanceof HttpResponse<?>) {
-                urls.add(((HttpResponse<?>) response).uri().toString());
+                versions.add(((HttpResponse<?>) response).version().name().toLowerCase());
             } else if (response instanceof RequestObject){
-                urls.add(((RequestObject) response).request.uri().toString());
+                versions.add(((RequestObject) response).request.version().get().name().toLowerCase());
+            } else if (response instanceof HttpClient){
+                versions.add(((HttpClient) response).version().name().toLowerCase());
             }
         }
-        return urls.toArray(String[]::new);
+        return versions.toArray(String[]::new);
     }
 
     @Override
@@ -50,7 +52,7 @@ public class ExprURL extends PropertyExpression<Object, String> {
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean debug) {
-        return "url";
+        return "version";
     }
 
     @Override
