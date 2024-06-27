@@ -28,7 +28,7 @@ public class HttpExchange {
         respond(null, responseCode);
     }
 
-    public void respond(@NotNull Object response, int responseCode){
+    public void respond(Object response, int responseCode){
         try {
             String string = response.toString();
             if (string == null){
