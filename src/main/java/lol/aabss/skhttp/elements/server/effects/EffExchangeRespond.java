@@ -31,13 +31,13 @@ public class EffExchangeRespond extends Effect {
 
     static {
         Skript.registerEffect(EffExchangeRespond.class,
-                "respond with [response] code %integer% [and message %-string%] [using %-httpexchange%]",
-                "(send|post) [response] code %integer% [and message %-string%] [using %-httpexchange%]"
+                "respond with [response] code %integer% [and message %-object%] [using %-httpexchange%]",
+                "(send|post) [response] code %integer% [and message %-object%] [using %-httpexchange%]"
         );
     }
 
     private Expression<Integer> code;
-    private Expression<String> message;
+    private Expression<Object> message;
     private Expression<HttpExchange> exchange;
 
     @Override
@@ -57,7 +57,7 @@ public class EffExchangeRespond extends Effect {
             exchange.respond(code);
             return;
         }
-        String message = this.message.getSingle(e);
+        Object message = this.message.getSingle(e);
         if (message == null){
             exchange.respond(code);
         } else {
@@ -77,7 +77,7 @@ public class EffExchangeRespond extends Effect {
             return false;
         }
         code = (Expression<Integer>) exprs[0];
-        message = (Expression<String>) exprs[1];
+        message = (Expression<Object>) exprs[1];
         exchange = (Expression<HttpExchange>) exprs[2];
         return true;
     }

@@ -1,9 +1,12 @@
 package lol.aabss.skhttp.objects.server;
 
 import lol.aabss.skhttp.SkHttp;
+import org.bukkit.Bukkit;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 
@@ -27,23 +30,34 @@ public class HttpServer {
     }
 
     public com.sun.net.httpserver.HttpServer server;
+    public List<String> registeredContexts = new ArrayList<>();
 
     public HttpContext createEndpoint(String method, String name, Consumer<HttpExchange> exchange){
-        return new HttpContext(server.createContext("/"+name, exchange1 -> {
+        if (registeredContexts.contains("/"+name)){
+            server.removeContext("/"+name);
+            registeredContexts.remove("/"+name);
+        }
+        HttpContext context = new HttpContext(server.createContext("/" + name, exchange1 -> {
             if (exchange1.getRequestMethod().equals(method)) {
                 exchange.accept(new HttpExchange(exchange1, name));
             } else {
                 exchange1.sendResponseHeaders(405, -1); // Method Not Allowed
             }
         }));
+        registeredContexts.add(context.path());
+        return context;
     }
 
     public void deleteEndpoint(String name){
-        server.removeContext(name);
+        if (registeredContexts.contains("/"+name)){
+            server.removeContext("/"+name);
+        }
     }
 
     public void deleteEndpoint(HttpContext context){
-        server.removeContext(context.context);
+        if (registeredContexts.contains(context.path())){
+            server.removeContext(context.path());
+        }
     }
 
     public InetSocketAddress address(){

@@ -30,7 +30,23 @@ public class HttpExchange {
 
     public void respond(Object response, int responseCode){
         try {
-            String string = response.toString();
+            Gson gson;
+            if (SkHttp.instance.getConfig().getBoolean("pretty-print-json", true)) {
+                gson = new GsonBuilder().setPrettyPrinting().create();
+            } else {
+                gson = new GsonBuilder().create();
+            }
+            String string = null;
+            if (response instanceof JsonElement) {
+                string = gson.toJson(response);
+            } else if (response != null){
+                try {
+                    JsonElement element = JsonParser.parseString(response.toString());
+                    string = gson.toJson(element);
+                } catch (Exception ignored){
+                    string = response.toString();
+                }
+            }
             if (string == null){
                 exchange.sendResponseHeaders(responseCode, -1);
             } else {
