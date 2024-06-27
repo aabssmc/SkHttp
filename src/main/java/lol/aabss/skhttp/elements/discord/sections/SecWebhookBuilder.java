@@ -60,8 +60,13 @@ public class SecWebhookBuilder extends Section {
         this.username = (Expression<String>) container.getOptional("username", false);
         this.avatar = (Expression<String>) container.getOptional("avatar", false);
         this.embed = (Expression<Embed>) container.getOptional("embed", false);
-        this.var = (Variable<?>) container.getOptional("variable", false);
-        return var != null;
+        if (container.getOptional("variable", false) instanceof Variable<?>){
+            this.var = (Variable<?>) container.getOptional("variable", false);
+            return var != null;
+        } else {
+            Skript.error("The object expression must be a variable.");
+            return false;
+        }
     }
 
     @Override

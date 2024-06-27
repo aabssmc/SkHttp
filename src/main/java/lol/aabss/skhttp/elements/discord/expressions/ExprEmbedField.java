@@ -40,7 +40,7 @@ public class ExprEmbedField extends SimpleExpression<Field> {
         if (name != null && value != null){
             return new Field[]{new Field(name, value, inline)};
         }
-        return new Field[]{null};
+        return new Field[]{};
     }
 
     @Override

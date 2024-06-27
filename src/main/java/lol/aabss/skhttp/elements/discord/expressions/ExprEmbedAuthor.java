@@ -47,7 +47,7 @@ public class ExprEmbedAuthor extends SimpleExpression<Author> {
                 return new Author[]{new Author(text, url)};
             }
         }
-        return new Author[]{null};
+        return new Author[]{};
     }
 
     @Override

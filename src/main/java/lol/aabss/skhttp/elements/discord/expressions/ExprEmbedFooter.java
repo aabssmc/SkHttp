@@ -45,7 +45,7 @@ public class ExprEmbedFooter extends SimpleExpression<Footer> {
                 return new Footer[]{new Footer(text)};
             }
         }
-        return new Footer[]{null};
+        return new Footer[]{};
     }
 
     @Override

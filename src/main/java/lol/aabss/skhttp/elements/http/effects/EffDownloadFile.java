@@ -21,6 +21,7 @@ import java.net.URL;
 import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.concurrent.CompletableFuture;
 
 import static lol.aabss.skhttp.SkHttp.instance;
 
@@ -52,23 +53,25 @@ public class EffDownloadFile extends Effect {
         String name = this.name.getSingle(e);
         Object urlString = this.url.getSingle(e);
         if (name != null && urlString != null) {
-            URL url;
-            InputStream in;
-            try {
-                if (urlString instanceof HttpResponse<?>) {
-                    url = ((HttpResponse<?>) urlString).uri().toURL();
-                } else if (urlString instanceof RequestObject) {
-                    url = ((RequestObject) urlString).request.uri().toURL();
-                } else if (urlString instanceof String) {
-                    url = new URL((String) urlString);
-                } else {
-                    return;
+            CompletableFuture.runAsync(() -> {
+                URL url;
+                InputStream in;
+                try {
+                    if (urlString instanceof HttpResponse<?>) {
+                        url = ((HttpResponse<?>) urlString).uri().toURL();
+                    } else if (urlString instanceof RequestObject) {
+                        url = ((RequestObject) urlString).request.uri().toURL();
+                    } else if (urlString instanceof String) {
+                        url = new URL((String) urlString);
+                    } else {
+                        return;
+                    }
+                    in = url.openStream();
+                    Files.copy(in, new File(instance.getDataFolder().getAbsolutePath(), name).toPath(), StandardCopyOption.REPLACE_EXISTING);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
                 }
-                in = url.openStream();
-                Files.copy(in, new File(instance.getDataFolder().getAbsolutePath(), name).toPath(), StandardCopyOption.REPLACE_EXISTING);
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
+            });
         }
     }
 

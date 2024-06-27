@@ -85,8 +85,13 @@ public class SecEmbedBuilder extends Section {
         this.image = (Expression<String>) container.getOptional("image", false);
         this.author = (Expression<Author>) container.getOptional("author", false);
         this.fields = (Expression<Field>) container.getOptional("fields", false);
-        this.var = (Variable<?>) container.getOptional("variable", false);
-        return var != null;
+        if (container.getOptional("variable", false) instanceof Variable<?>){
+            this.var = (Variable<?>) container.getOptional("variable", false);
+            return var != null;
+        } else {
+            Skript.error("The object expression must be a variable.");
+            return false;
+        }
     }
 
     @Override
