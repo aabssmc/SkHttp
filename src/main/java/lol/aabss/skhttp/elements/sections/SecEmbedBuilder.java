@@ -32,9 +32,9 @@ import java.util.List;
         "\tcolor: \"##ffffff\"",
         "\ttimestamp: true",
         "\tfooter: footer with text \"hi\"",
-        "\tthumbnail: \"https://aabss.lol/assets/bg.jpg\"",
-        "\timage: \"https://aabss.lol/assets/aabss.jpg\"",
-        "\tauthor: author with text \"aabss\" and url \"https://aabss.lol\"",
+        "\tthumbnail: \"https://aabss.cc/assets/bg.jpg\"",
+        "\timage: \"https://aabss.cc/assets/aabss.jpg\"",
+        "\tauthor: author with text \"aabss\" and url \"https://aabss.cc\"",
         "\tfields: {_field1}, {_field2}, {_field3}",
         "\tvariable: {_var}"
 })

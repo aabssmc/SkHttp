@@ -26,7 +26,7 @@ import java.util.List;
         "discord webhook builder:",
         "\tcontent: \"SkHttp is a new skript addon for http things!\"",
         "\tusername: \"SkHttp\"",
-        "\tavatar: \"https://aabss.lol/assets/aabss.jpg\"",
+        "\tavatar: \"https://aabss.cc/assets/aabss.jpg\"",
         "\tembed: {_embed}",
         "\tvariable: {_webhook}"
 })

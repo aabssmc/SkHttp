@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.concurrent.ExecutionException;
 
 import static lol.aabss.skhttp.SkHttp.LAST_RESPONSE;
 
@@ -28,14 +27,14 @@ import static lol.aabss.skhttp.SkHttp.LAST_RESPONSE;
 @Description("Sends a optionally async request.")
 @Examples({
         "send async request using {_client} and {_request} and store the response in {_response}",
-        "send request using {_client} and {_request} and store the response in {_response}"
+        "send request {_request} and store the response in {_response}"
 })
 @Since("1.0")
 public class EffSendHttpRequest extends Effect {
 
     static {
         Skript.registerEffect(EffSendHttpRequest.class,
-                "(send|post) [http] request using [client] %httpclient% and [request] %httprequest% " +
+                "(send|post) [http] request [using [client] %-httpclient% and] [request] %httprequest% " +
                         "(and|then) store (the response|it) in %object%"
         );
     }
@@ -48,42 +47,40 @@ public class EffSendHttpRequest extends Effect {
 
     @Override
     protected void execute(@NotNull Event e) {
-        try {
-            Variable<?> var = this.var;
-            if (var != null) {
-                HttpClient client = this.client.getSingle(e);
-                if (client != null) {
-                    RequestObject requestObject = this.request.getSingle(e);
-                    if (requestObject != null) {
-                        HttpRequest request = requestObject.request;
-                        HttpResponse<?> response;
-                        HttpResponse.BodyHandler<?> handler = HttpResponse.BodyHandlers.ofString();
-                        if (requestObject.type != null) {
-                            handler = switch (RequestObject.RequestType.valueOf(requestObject.type.toUpperCase())) {
-                                case BYTES -> HttpResponse.BodyHandlers.ofByteArray();
-                                case PATH, FILE -> {
-                                    assert requestObject.path != null;
-                                    yield HttpResponse.BodyHandlers.ofFile(requestObject.path);
-                                }
-                                case INPUTSTREAM, INPUTSTREAMSUPPLIER -> HttpResponse.BodyHandlers.ofInputStream();
-                                default -> HttpResponse.BodyHandlers.ofString();
-                            };
+        Variable<?> var = this.var;
+        if (var != null) {
+            HttpClient client;
+            if (this.client == null){
+                client = HttpClient.newHttpClient();
+            } else {
+                client = this.client.getSingle(e);
+            }
+            if (client != null) {
+                RequestObject requestObject = this.request.getSingle(e);
+                if (requestObject != null) {
+                    HttpRequest request = requestObject.request;
+                    if (async) {
+                        client.sendAsync(request, HttpResponse.BodyHandlers.ofString()).whenCompleteAsync((httpResponse, throwable) -> {
+                            var.change(e,
+                                    new HttpResponse[]{httpResponse},
+                                    Changer.ChangeMode.SET
+                            );
+                            LAST_RESPONSE = httpResponse;
+                        });
+                    } else {
+                        try {
+                            HttpResponse<?> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+                            var.change(e,
+                                    new HttpResponse[]{response},
+                                    Changer.ChangeMode.SET
+                            );
+                            LAST_RESPONSE = response;
+                        } catch (IOException | InterruptedException ex) {
+                            throw new RuntimeException(ex);
                         }
-                        if (async) {
-                            response = client.sendAsync(request, handler).get();
-                        } else {
-                            response = client.send(request, handler);
-                        }
-                        var.change(e,
-                                new HttpResponse[]{response},
-                                Changer.ChangeMode.SET
-                        );
-                        LAST_RESPONSE = response;
                     }
                 }
             }
-        } catch (IOException | InterruptedException | ExecutionException ex) {
-            throw new RuntimeException(ex);
         }
     }
 

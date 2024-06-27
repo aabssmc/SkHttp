@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/SkHttp.main.iml" filepath="$PROJECT_DIR$/.idea/modules/SkHttp.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/SkHttp.test.iml" filepath="$PROJECT_DIR$/.idea/modules/SkHttp.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/lol.aabss.SkHttp.main.iml" filepath="$PROJECT_DIR$/.idea/modules/lol.aabss.SkHttp.main.iml" />
     </modules>
   </component>
