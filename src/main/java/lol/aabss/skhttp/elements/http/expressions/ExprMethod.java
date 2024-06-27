@@ -4,41 +4,22 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.expressions.base.PropertyExpression;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.SkriptParser;
-import ch.njol.util.Kleenean;
+import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import lol.aabss.skhttp.objects.RequestObject;
-import org.bukkit.event.Event;
+import lol.aabss.skhttp.objects.server.HttpExchange;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.net.http.HttpRequest;
-import java.util.ArrayList;
-import java.util.List;
-
 @Name("Http Method")
-@Description("Returns the method of a http request.")
+@Description("Returns the method of a http request/exchange.")
 @Examples({
         "send method of {_r}"
 })
 @Since("1.0")
-public class ExprMethod extends PropertyExpression<RequestObject, String> {
+public class ExprMethod extends SimplePropertyExpression<Object, String> {
 
     static {
-        register(ExprMethod.class, String.class, "[request] method", "httprequests");
-    }
-
-    @Override
-    protected String @NotNull [] get(@NotNull Event event, RequestObject @NotNull [] source) {
-        List<String> methods = new ArrayList<>();
-        for (RequestObject requestObject : source){
-            HttpRequest request = requestObject.request;
-            if (request != null){
-                methods.add(request.method());
-            }
-        }
-        return methods.toArray(String[]::new);
+        register(ExprMethod.class, String.class, "[request] method", "httprequests/httpexchanges");
     }
 
     @Override
@@ -47,13 +28,17 @@ public class ExprMethod extends PropertyExpression<RequestObject, String> {
     }
 
     @Override
-    public @NotNull String toString(@Nullable Event e, boolean debug) {
+    protected @NotNull String getPropertyName() {
         return "method";
     }
 
     @Override
-    public boolean init(Expression<?>[] exprs, int matchedPattern, @NotNull Kleenean isDelayed, SkriptParser.@NotNull ParseResult parseResult) {
-        setExpr((Expression<? extends RequestObject>) exprs[0]);
-        return true;
+    public @Nullable String convert(Object object) {
+        if (object instanceof RequestObject){
+            return ((RequestObject) object).request.method();
+        } else if (object instanceof HttpExchange){
+            return ((HttpExchange) object).method();
+        }
+        return null;
     }
 }

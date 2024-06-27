@@ -10,6 +10,7 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import lol.aabss.skhttp.objects.server.HttpExchange;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -23,32 +24,39 @@ import java.net.http.HttpResponse;
         "send header of {_request} by key \"Content-Type\""
 })
 @Since("1.3")
-public class ExprHeadersByKey extends SimpleExpression<String[]> {
+public class ExprHeadersByKey extends SimpleExpression<String> {
 
     static {
-        Skript.registerExpression(ExprHeadersByKey.class, String[].class, ExpressionType.COMBINED,
-                "header of %httpresponses/httprequests% (with|by|from) key %string%"
+        Skript.registerExpression(ExprHeadersByKey.class, String.class, ExpressionType.COMBINED,
+                "header of %httpresponses/httprequests/httpexchanges% (with|by|from) key %string%"
         );
     }
+
+    private boolean request;
 
     private Expression<Object> object;
     private Expression<String> key;
     @Override
-    protected String[] @NotNull [] get(@NotNull Event e) {
+    protected String @NotNull [] get(@NotNull Event e) {
         Object obj = this.object.getSingle(e);
         if (obj == null){
-            return new String[][]{};
+            return new String[]{};
         }
         String key = this.key.getSingle(e);
         if (key == null){
-            return new String[][]{};
+            return new String[]{};
         }
         if (obj instanceof HttpResponse<?>){
-            return new String[][]{((HttpResponse<?>) obj).headers().map().get(key).toArray(String[]::new)};
+            return ((HttpResponse<?>) obj).headers().map().get(key).toArray(String[]::new);
         } else if (obj instanceof HttpRequest){
-            return new String[][]{((HttpRequest) obj).headers().map().get(key).toArray(String[]::new)};
+            return ((HttpRequest) obj).headers().map().get(key).toArray(String[]::new);
+        } else if (object instanceof HttpExchange){
+            if (request) {
+                return ((HttpExchange) object).requestHeaders().get(key).toArray(String[]::new);
+            }
+            return ((HttpExchange) object).responseHeaders().get(key).toArray(String[]::new);
         }
-        return new String[][]{};
+        return new String[]{};
     }
 
     @Override
@@ -57,8 +65,8 @@ public class ExprHeadersByKey extends SimpleExpression<String[]> {
     }
 
     @Override
-    public @NotNull Class<? extends String[]> getReturnType() {
-        return String[].class;
+    public @NotNull Class<? extends String> getReturnType() {
+        return String.class;
     }
 
     @Override
@@ -70,6 +78,7 @@ public class ExprHeadersByKey extends SimpleExpression<String[]> {
     public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, SkriptParser.@NotNull ParseResult parseResult) {
         object = (Expression<Object>) exprs[0];
         key = (Expression<String>) exprs[1];
+        request = parseResult.hasTag("request");
         return true;
     }
 }
