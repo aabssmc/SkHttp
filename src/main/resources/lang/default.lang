@@ -1,12 +1,22 @@
 version: 1.2
 
 types:
-    httpclient: httpclient¦s @an
-    httprequest: httprequest¦s @an
-    httpresponse: httpresposne¦s @an
-    discordwebhook: discordwebhook¦s @a
+    discordwebhook: discord ?webhook¦s @a
+    discordembed: discord ?embed¦s @a
+    discordfooter: discord ?footer¦s @a
+    discordauthor: discord ?author¦s @a
+    discordfield: discord ?field¦s @a
 
-    discordembed: discordembed¦s @a
-    discordfooter: discordfooter¦s @a
-    discordauthor: discordauthor¦s @a
-    discordfield: discordfiled¦s @a
+    httpclient: http ?client¦s @an
+    httprequest: http ?request¦s @an
+    httpresponse: http ?resposne¦s @a
+
+    httpcontext: http ?context¦s @a
+    httpexchange: http ?exchange¦s @an
+    httphandler: http ?handler¦s @an
+    httpserver: http ?server¦s @a
+
+    jsonobject: json ?object¦s @a
+    jsonarray: json ?array¦s @a
+    jsonelement: json ?element¦s @a
+    jsonprimitive: json ?primitive¦s @a
