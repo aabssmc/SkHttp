@@ -14,7 +14,7 @@ import java.net.http.HttpResponse;
 @Name("HTTP Headers")
 @Description("Returns the headers of a http response of request.")
 @Examples({
-        "send headers of {_request}."
+        "send headers of {_request}"
 })
 @Since("1.2")
 public class ExprHeaders extends SimplePropertyExpression<Object, String> {
