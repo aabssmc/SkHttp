@@ -1,6 +1,10 @@
 package lol.aabss.skhttp;
 
 import ch.njol.skript.Skript;
+import lol.aabss.skhttp.objects.Logger;
+import lol.aabss.skhttp.objects.server.HttpContext;
+import lol.aabss.skhttp.objects.server.HttpExchange;
+import lol.aabss.skhttp.objects.server.HttpServer;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -10,6 +14,10 @@ import java.net.http.HttpResponse;
 public final class SkHttp extends JavaPlugin {
 
     public static HttpResponse<?> LAST_RESPONSE;
+    public static HttpServer LAST_SERVER;
+    public static HttpContext LAST_CONTEXT;
+    public static HttpExchange LAST_EXCHANGE;
+    public static final Logger LOGGER = new Logger();
     public static SkHttp instance;
 
     @Override
@@ -21,13 +29,14 @@ public final class SkHttp extends JavaPlugin {
                         .loadClasses("lol.aabss.skhttp", "elements");
                 metrics.addCustomChart(new Metrics.SimplePie("skript_version", () -> Skript.getVersion().toString()));
                 instance = this;
-                getLogger().info("SkHttp load success");
+                LOGGER.success("SkHttp loaded.");
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         } else{
-            getLogger().severe("Skript not found! Please add Skript.");
+            LOGGER.error("Skript not found! Please add Skript.");
             getPluginLoader().disablePlugin(this);
         }
     }
+
 }
