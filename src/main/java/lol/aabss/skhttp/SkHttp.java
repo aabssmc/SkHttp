@@ -15,6 +15,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.net.http.HttpResponse;
+import java.net.http.WebSocket;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +25,7 @@ public final class SkHttp extends JavaPlugin {
     public static HttpServer LAST_SERVER;
     public static HttpContext LAST_CONTEXT;
     public static HttpExchange LAST_EXCHANGE;
+    public static WebSocket LAST_WEBSOCKET;
     public static final Logger LOGGER = new Logger();
     public static SkHttp instance;
 
