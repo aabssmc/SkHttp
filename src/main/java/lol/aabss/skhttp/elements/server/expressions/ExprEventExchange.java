@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 @Examples({
         "send event-httpexchange"
 })
-@Since("1.2")
+@Since("1.3")
 public class ExprEventExchange extends EventValueExpression<HttpExchange> {
 
     static {

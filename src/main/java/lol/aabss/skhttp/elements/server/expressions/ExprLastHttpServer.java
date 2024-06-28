@@ -23,7 +23,7 @@ import static lol.aabss.skhttp.SkHttp.LAST_SERVER;
 @Examples({
         "set {_r} to last server"
 })
-@Since("1.0")
+@Since("1.3")
 public class ExprLastHttpServer extends SimpleExpression<HttpServer> {
 
     static {

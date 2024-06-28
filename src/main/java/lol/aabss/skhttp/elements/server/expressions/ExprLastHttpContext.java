@@ -23,7 +23,7 @@ import static lol.aabss.skhttp.SkHttp.LAST_CONTEXT;
 @Examples({
         "set {_r} to last context"
 })
-@Since("1.0")
+@Since("1.3")
 public class ExprLastHttpContext extends SimpleExpression<HttpContext> {
 
     static {

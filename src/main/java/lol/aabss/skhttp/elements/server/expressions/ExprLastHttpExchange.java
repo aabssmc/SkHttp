@@ -23,7 +23,7 @@ import static lol.aabss.skhttp.SkHttp.LAST_EXCHANGE;
 @Examples({
         "set {_r} to last exchange"
 })
-@Since("1.0")
+@Since("1.3")
 public class ExprLastHttpExchange extends SimpleExpression<HttpExchange> {
 
     static {
