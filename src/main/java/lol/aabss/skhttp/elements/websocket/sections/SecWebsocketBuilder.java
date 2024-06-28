@@ -132,9 +132,9 @@ public class SecWebsocketBuilder extends EffectSection {
                 builder = builder.header(key, headers.get(key));
             }
         }
-        builder.buildAsync(URI.create(url), new WebsocketBukkitListener()).whenCompleteAsync((webSocket, throwable) -> {
-            var.change(e, new Object[]{webSocket}, Changer.ChangeMode.SET);
-        });
+        builder.buildAsync(URI.create(url), new WebsocketBukkitListener()).whenCompleteAsync((webSocket, throwable) ->
+                var.change(e, new Object[]{webSocket}, Changer.ChangeMode.SET)
+        );
     }
 
     @Override

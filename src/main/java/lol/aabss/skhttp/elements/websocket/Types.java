@@ -4,7 +4,6 @@ import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
-import com.sun.net.httpserver.SimpleFileServer;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.http.WebSocket;

@@ -75,7 +75,7 @@ public class EffWebsocketSendStatus extends Effect {
     }
 
     @Override
-    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+    public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
         pattern = matchedPattern;
         last = parseResult.hasTag("last");
         if (matchedPattern == 0){
