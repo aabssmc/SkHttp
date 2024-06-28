@@ -2,6 +2,7 @@ package lol.aabss.skhttp.objects;
 
 import ch.njol.skript.registrations.Classes;
 import com.google.gson.*;
+import lol.aabss.skhttp.SkHttp;
 
 public class Json {
 
@@ -78,7 +79,10 @@ public class Json {
     }
 
     public String toString() {
-        return gson.toJson(element);
+        if (SkHttp.instance.getConfig().getBoolean("pretty-print-json", true)) {
+            return gson.toJson(element);
+        }
+        return element.toString();
     }
 
 }
