@@ -31,6 +31,20 @@ public class Json {
             return addProperty(key, value);
         } else if (value == null){
             return addProperty(key, null);
+        } else if (value instanceof Iterable<?>){
+            JsonArray array = new JsonArray();
+            for (Object object : (Iterable<?>) value){
+                if (Classes.getExactClassInfo(object.getClass()) != null && skript){
+                    array.add(new Json(key, Classes.toString(object)).element);
+                } else {
+                    array.add(new Json(key, gson.toJsonTree(object)).element);
+                }
+            }
+            if (element instanceof JsonObject) {
+                ((JsonObject) element).add(key, array);
+            } else if (element instanceof JsonArray) {
+                ((JsonArray) element).add(array);
+            }
         } else {
             if (Classes.getExactClassInfo(value.getClass()) != null && skript){
                 if (element instanceof JsonObject) {
