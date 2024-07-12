@@ -13,6 +13,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.http.HttpResponse;
 import java.net.http.WebSocket;
@@ -28,6 +30,7 @@ public final class SkHttp extends JavaPlugin {
     public static WebSocket LAST_WEBSOCKET;
     public static final Logger LOGGER = new Logger();
     public static SkHttp instance;
+    public File WEBSITE_FOLDER = new File(this.getDataFolder(), "sites");
 
     @Override
     public void onEnable() {
@@ -41,6 +44,9 @@ public final class SkHttp extends JavaPlugin {
                         .loadClasses("lol.aabss.skhttp", "elements");
                 metrics.addCustomChart(new Metrics.SimplePie("skript_version", () -> Skript.getVersion().toString()));
                 instance = this;
+                if (WEBSITE_FOLDER.mkdirs()) {
+                    generateExampleSite();
+                }
                 LOGGER.success("SkHttp loaded.");
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -48,6 +54,45 @@ public final class SkHttp extends JavaPlugin {
         } else{
             LOGGER.error("Skript not found! Please add Skript.");
             getPluginLoader().disablePlugin(this);
+        }
+    }
+
+    public void generateExampleSite() throws IOException {
+        File example = new File(WEBSITE_FOLDER, "skhttp-example");
+        if (example.mkdirs()) {
+            File index = new File(example, "index.html");
+            if (index.createNewFile()) {
+                FileWriter fw = new FileWriter(index);
+                fw.write("""
+                        <!DOCTYPE html>
+                        	<head>
+                        		<link rel="stylesheet" href="style.css">
+                        	</head>
+                        	<body>
+                        		<header><h1>SkHttp Example Site</h1></header>
+                        	</body>
+                        </html>
+                        """);
+                fw.close();
+            }
+            File css = new File(example, "style.css");
+            if (css.createNewFile()){
+                FileWriter fw = new FileWriter(css);
+                fw.write("""
+                        body {
+                        	font-family: Arial, sans-serif;
+                        	margin: 0;
+                        	padding: 0;
+                        }
+                        header {
+                        	background-color: #333;
+                        	color: #fff;
+                        	text-align: center;
+                        	padding: 10px;
+                        }
+                        """);
+                fw.close();
+            }
         }
     }
 

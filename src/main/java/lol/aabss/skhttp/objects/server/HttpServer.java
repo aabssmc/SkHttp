@@ -1,8 +1,9 @@
 package lol.aabss.skhttp.objects.server;
 
 import lol.aabss.skhttp.SkHttp;
-import org.bukkit.Bukkit;
+import lol.aabss.skhttp.objects.WebHandler;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
@@ -48,6 +49,14 @@ public class HttpServer {
         return context;
     }
 
+    public void createSite(String path, String files){
+        File file = new File(SkHttp.instance.WEBSITE_FOLDER, files);
+        if (!file.isDirectory() || !file.exists()){
+            return;
+        }
+        server.createContext((path.startsWith("/") ? "" : "/")+path, new WebHandler(file));
+    }
+
     public void deleteEndpoint(String name){
         if (registeredContexts.contains("/"+name)){
             server.removeContext("/"+name);
@@ -76,8 +85,8 @@ public class HttpServer {
         if (executor() == null){
             executor(null);
         }
-        SkHttp.LOGGER.success("Server started on ip: "+ server.getAddress().getAddress().getHostName() + ", Port: "+server.getAddress().getPort());
         server.start();
+        SkHttp.LOGGER.success("Server started on ip: "+ server.getAddress().getAddress().getHostName() + ", Port: "+server.getAddress().getPort());
     }
 
     public void stop(int delay){
