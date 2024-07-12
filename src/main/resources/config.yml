@@ -1,1 +1,5 @@
 pretty-print-json: true
+
+# do not put minecraft server port!
+# set to -1 for random
+default-server-port: -1
