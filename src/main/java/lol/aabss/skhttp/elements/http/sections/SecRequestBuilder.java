@@ -11,6 +11,7 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.*;
 import ch.njol.skript.registrations.Classes;
+import ch.njol.skript.util.Timespan;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
 import com.btk5h.skriptmirror.ObjectWrapper;
@@ -28,6 +29,7 @@ import java.net.URI;
 import java.net.http.HttpRequest;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -45,6 +47,7 @@ import java.util.regex.Pattern;
         "\turl: \"https://www.someurl.com\"",
         "\tmethod: \"GET\"",
         "\tbody: \"some body\"",
+        "\ttimeout: 30 seconds",
         "\theaders:",
         "\t\tsomekey: somevalue",
         "\t\tContent-Type: application/json"
@@ -60,6 +63,7 @@ public class SecRequestBuilder extends Section {
     private Expression<String> url;
     private Expression<String> method;
     private Expression<Object> body;
+    private Expression<Timespan> timeout;
     private final HashMap<String, String> headers = new HashMap<>();
     private Variable<?> var;
 
@@ -70,6 +74,7 @@ public class SecRequestBuilder extends Section {
         ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("url", null, false, String.class));
         ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("method", null, false, String.class));
         ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("body", null, true, Object.class));
+        ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("timeout", null, true, Timespan.class));
         ENTRY_VALIDATOR.addSection("headers", true);
         // (create|make) [a] [new] http request using [url] %string% and [with] [method] %string% [and [with] [header[s]] %-strings%] [and [body] %-string%] (then|and) store it in %object%
         // (create|make) [a] [new] http request using [url] %string% and [with] [method] %string% [and [body] %-string%] [and [with] [header[s]] %-strings%] (then|and) store it in %object%
@@ -84,6 +89,7 @@ public class SecRequestBuilder extends Section {
         this.method = (Expression<String>) ENTRY_CONTAINER.getOptional("method", false);
         if (this.method == null) return false;
         this.body = (Expression<Object>) ENTRY_CONTAINER.getOptional("body", false);
+        this.timeout = (Expression<Timespan>) ENTRY_CONTAINER.getOptional("timeout", false);
 
         if (exprs[0] instanceof Variable<?>){
             this.var = (Variable<?>) exprs[0];
@@ -142,6 +148,13 @@ public class SecRequestBuilder extends Section {
         if (method == null) {
             return;
         }
+        Timespan timeout = null;
+        if (this.timeout != null) {
+            timeout = this.timeout.getSingle(e);
+            if (timeout == null) {
+                return;
+            }
+        }
         Variable<?> var = this.var;
         if (var == null) {
             return;
@@ -166,11 +179,9 @@ public class SecRequestBuilder extends Section {
             if (body != null) {
                 request = HttpRequest.newBuilder()
                         .uri(URI.create(uri));
-                System.out.println(body.getClass());
                 if (SKRIPT_REFLECT_SUPPORTED && body instanceof ObjectWrapper){
                     body = ((ObjectWrapper) body).get();
                 }
-                System.out.println(body.getClass());
                 if (body instanceof File || body instanceof Path) {
                     try {
                         Path path;
@@ -199,13 +210,7 @@ public class SecRequestBuilder extends Section {
                 } else {
                     publisher = HttpRequest.BodyPublishers.ofString(String.valueOf(body));
                 }
-                switch (method.toUpperCase()){
-                    case "POST": request.POST(publisher);
-                    case "GET": request.GET();
-                    case "PUT": request.PUT(publisher);
-                    case "DELETE": request.DELETE();
-                    default: request.method(method, publisher);
-                }
+                request.method(method.toUpperCase(), publisher);
             } else {
                 return;
             }
@@ -217,6 +222,11 @@ public class SecRequestBuilder extends Section {
             for (String key : headers.keySet()) {
                 request = request.header(key, headers.get(key));
             }
+        }
+        if (timeout != null) {
+            request = request.timeout(Duration.ofMillis(timeout.getMilliSeconds()));
+        } else {
+            request = request.timeout(Duration.ofMinutes(1));
         }
         // -----------
         http = request.build();

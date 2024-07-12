@@ -13,7 +13,6 @@ import ch.njol.skript.util.Getter;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
 import lol.aabss.skhttp.SkHttp;
-import lol.aabss.skhttp.elements.http.sections.SecSendAsyncHttpRequest;
 import lol.aabss.skhttp.objects.server.HttpExchange;
 import lol.aabss.skhttp.objects.server.HttpServer;
 import org.bukkit.event.Event;

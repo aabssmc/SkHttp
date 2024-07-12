@@ -1,4 +1,4 @@
-package lol.aabss.skhttp.elements;
+package lol.aabss.skhttp.elements.util;
 
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;

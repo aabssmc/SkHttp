@@ -5,19 +5,23 @@ import org.bukkit.ChatColor;
 
 public class Logger{
 
-    public void success(String message){
-        Bukkit.getConsoleSender().sendMessage(ChatColor.GOLD +"[SkHttp] " + ChatColor.RESET + ChatColor.GREEN + message);
+    public void success(Object message){
+        Bukkit.getConsoleSender().sendMessage(ChatColor.GOLD +"[SkHttp] "
+                + ChatColor.translateAlternateColorCodes('&', "&r&a"+ message));
     }
 
-    public void log(String message){
-        Bukkit.getConsoleSender().sendMessage(ChatColor.GOLD +"[SkHttp] " + ChatColor.RESET + ChatColor.WHITE + message);
+    public void log(Object message){
+        Bukkit.getConsoleSender().sendMessage(ChatColor.GOLD +"[SkHttp] "
+                + ChatColor.translateAlternateColorCodes('&', "&r&f"+ message));
     }
 
-    public void warn(String message){
-        Bukkit.getConsoleSender().sendMessage(ChatColor.GOLD +"[SkHttp] " + ChatColor.RESET + ChatColor.YELLOW + message);
+    public void warn(Object message){
+        Bukkit.getConsoleSender().sendMessage(ChatColor.GOLD +"[SkHttp] "
+                + ChatColor.translateAlternateColorCodes('&', "&r&e"+ message));
     }
 
-    public void error(String message){
-        Bukkit.getConsoleSender().sendMessage(ChatColor.GOLD +"[SkHttp] " + ChatColor.RESET + ChatColor.RED + message);
+    public void error(Object message){
+        Bukkit.getConsoleSender().sendMessage(ChatColor.GOLD +"[SkHttp] "
+                + ChatColor.translateAlternateColorCodes('&', "&r&c"+ message));
     }
 }
