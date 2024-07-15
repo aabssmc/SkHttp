@@ -8,6 +8,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.util.AsyncEffect;
 import ch.njol.util.Kleenean;
 import com.itsradiix.discordwebhook.DiscordWebHook;
 import org.bukkit.event.Event;
@@ -20,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
         "send \"ok 123\" to discord webhook with url \"https://discord.com/something\""
 })
 @Since("1.1")
-public class EffSendDiscordWebhook extends Effect {
+public class EffSendDiscordWebhook extends AsyncEffect {
 
     static {
         Skript.registerEffect(EffSendDiscordWebhook.class,

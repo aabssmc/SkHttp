@@ -5,9 +5,9 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.util.AsyncEffect;
 import ch.njol.util.Kleenean;
 import lol.aabss.skhttp.objects.server.HttpContext;
 import lol.aabss.skhttp.objects.server.HttpServer;
@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
         "remove endpoint \"info\" from last http server"
 })
 @Since("1.3")
-public class EffRemoveServerEndpoint extends Effect {
+public class EffRemoveServerEndpoint extends AsyncEffect {
 
     static {
         Skript.registerEffect(EffRemoveServerEndpoint.class,
@@ -33,7 +33,7 @@ public class EffRemoveServerEndpoint extends Effect {
     private Expression<HttpServer> server;
 
     @Override
-    protected void execute(Event e) {
+    protected void execute(@NotNull Event e) {
         HttpServer server = this.server.getSingle(e);
         if (server == null){
             return;

@@ -8,6 +8,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.util.AsyncEffect;
 import ch.njol.util.Kleenean;
 import lol.aabss.skhttp.objects.RequestObject;
 import org.bukkit.event.Event;
@@ -32,7 +33,7 @@ import java.util.concurrent.CompletableFuture;
         "download file from \"https://i.imgur.com/h8iRx75.png\" to \"image.png\""
 })
 @Since("1.2")
-public class EffDownloadFile extends Effect {
+public class EffDownloadFile extends AsyncEffect {
 
     static {
         Skript.registerEffect(EffDownloadFile.class,
@@ -44,33 +45,30 @@ public class EffDownloadFile extends Effect {
     private Expression<String> path;
 
     @Override
-    protected void execute(Event e) {
+    protected void execute(@NotNull Event e) {
         if (path == null || url == null){
             return;
         }
         String path = this.path.getSingle(e);
         Object urlString = this.url.getSingle(e);
         if (path != null && urlString != null) {
-            CompletableFuture.runAsync(() -> {
+            try {
                 URL url;
-                InputStream in;
-                try {
-                    if (urlString instanceof HttpResponse<?>) {
-                        url = ((HttpResponse<?>) urlString).uri().toURL();
-                    } else if (urlString instanceof RequestObject) {
-                        url = ((RequestObject) urlString).request.uri().toURL();
-                    } else if (urlString instanceof String) {
-                        url = new URL((String) urlString);
-                    } else {
-                        return;
-                    }
-                    ReadableByteChannel rbc = Channels.newChannel(url.openStream());
-                    FileOutputStream fos = new FileOutputStream(path);
-                    fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
+                if (urlString instanceof HttpResponse<?>) {
+                    url = ((HttpResponse<?>) urlString).uri().toURL();
+                } else if (urlString instanceof RequestObject) {
+                    url = ((RequestObject) urlString).request.uri().toURL();
+                } else if (urlString instanceof String) {
+                    url = new URL((String) urlString);
+                } else {
+                    return;
                 }
-            });
+                ReadableByteChannel rbc = Channels.newChannel(url.openStream());
+                FileOutputStream fos = new FileOutputStream(path);
+                fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
         }
     }
 
@@ -80,7 +78,7 @@ public class EffDownloadFile extends Effect {
     }
 
     @Override
-    public boolean init(Expression<?>[] exprs, int matchedPattern, @NotNull Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+    public boolean init(Expression<?>[] exprs, int matchedPattern, @NotNull Kleenean isDelayed, SkriptParser.@NotNull ParseResult parseResult) {
         url = (Expression<Object>) exprs[0];
         path = (Expression<String>) exprs[1];
         return true;
