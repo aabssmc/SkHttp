@@ -14,7 +14,6 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Timespan;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
-import com.btk5h.skriptmirror.ObjectWrapper;
 import lol.aabss.skhttp.objects.RequestObject;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
@@ -35,6 +34,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static lol.aabss.skhttp.SkHttp.SKRIPT_REFLECT_SUPPORTED;
 
 @Name("HTTP Request Builder")
 @Description("Builds a HTTP request.")
@@ -57,7 +58,6 @@ public class SecRequestBuilder extends Section {
 
     private static final Pattern VARIABLE_PATTERN = Pattern.compile("\\{(.*?)}");
 
-    private static final boolean SKRIPT_REFLECT_SUPPORTED = Skript.classExists("com.btk5h.skriptmirror.ObjectWrapper");
     private static final EntryValidator.EntryValidatorBuilder ENTRY_VALIDATOR = EntryValidator.builder();
     private static EntryContainer ENTRY_CONTAINER;
     private Expression<String> url;
@@ -179,8 +179,8 @@ public class SecRequestBuilder extends Section {
             if (body != null) {
                 request = HttpRequest.newBuilder()
                         .uri(URI.create(uri));
-                if (SKRIPT_REFLECT_SUPPORTED && body instanceof ObjectWrapper){
-                    body = ((ObjectWrapper) body).get();
+                if (SKRIPT_REFLECT_SUPPORTED && body instanceof com.btk5h.skriptmirror.ObjectWrapper){
+                    body = ((com.btk5h.skriptmirror.ObjectWrapper) body).get();
                 }
                 if (body instanceof File || body instanceof Path) {
                     try {

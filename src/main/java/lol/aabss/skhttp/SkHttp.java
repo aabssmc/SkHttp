@@ -30,6 +30,7 @@ public final class SkHttp extends JavaPlugin {
     public static WebSocket LAST_WEBSOCKET;
     public static final Logger LOGGER = new Logger();
     public static SkHttp instance;
+    public static final boolean SKRIPT_REFLECT_SUPPORTED = Skript.classExists("com.btk5h.skriptmirror.ObjectWrapper");
     public File WEBSITE_FOLDER = new File(this.getDataFolder(), "sites");
 
     @Override
