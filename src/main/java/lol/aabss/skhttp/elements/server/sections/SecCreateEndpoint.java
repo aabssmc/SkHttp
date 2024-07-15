@@ -117,7 +117,6 @@ public class SecCreateEndpoint extends Section {
                 CreateEndpointEvent endpoint = new CreateEndpointEvent(o);
                 Variables.setLocalVariables(endpoint, Variables.copyLocalVariables(event));
                 TriggerItem.walk(trigger, endpoint);
-                Variables.setLocalVariables(event, Variables.copyLocalVariables(endpoint));
                 Variables.removeLocals(endpoint);
             };
         } else {
