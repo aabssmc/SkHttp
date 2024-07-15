@@ -1,5 +1,10 @@
+
+# whether json should pretty print when needed
 pretty-print-json: true
 
 # do not put minecraft server port!
 # set to -1 for random
 default-server-port: -1
+
+# whether indexes for things like json should start at 1 (true) or 0 (false)
+use-skript-index: false

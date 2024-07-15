@@ -116,8 +116,7 @@ public class SecCreateEndpoint extends Section {
                 SkHttp.LAST_EXCHANGE = o;
                 CreateEndpointEvent endpoint = new CreateEndpointEvent(o);
                 Variables.setLocalVariables(endpoint, Variables.copyLocalVariables(event));
-                TriggerItem.walk(trigger, endpoint);
-                Variables.removeLocals(endpoint);
+                trigger.execute(endpoint);
             };
         } else {
             consumer = null;

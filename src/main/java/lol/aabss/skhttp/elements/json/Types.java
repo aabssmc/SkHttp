@@ -1,14 +1,16 @@
-package lol.aabss.skhttp.elements.util;
+package lol.aabss.skhttp.elements.json;
 
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
+import lol.aabss.skhttp.objects.Json;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.skriptlang.skript.lang.converter.Converter;
+import org.skriptlang.skript.lang.converter.Converters;
 
 public class Types {
     static {
@@ -35,6 +37,12 @@ public class Types {
                             }
                     )
             );
+            Converters.registerConverter(JsonObject.class, String.class, new Converter<>() {
+                @Override
+                public @Nullable String convert(JsonObject from) {
+                    return new Json(from, null).toString();
+                }
+            });
         }
 
         if (Classes.getExactClassInfo(JsonArray.class) == null){
@@ -60,56 +68,12 @@ public class Types {
                             }
                     )
             );
-        }
-
-        if (Classes.getExactClassInfo(JsonElement.class) == null){
-            Classes.registerClass(new ClassInfo<>(JsonElement.class, "jsonelement")
-                    .name("Json Element")
-                    .description("Represents a json element.")
-                    .user("json ?elements?")
-                    .since("1.3")
-                    .parser(new Parser<>() {
-                                @Override
-                                public boolean canParse(@NotNull ParseContext context) {
-                                    return false;
-                                }
-                                @Override
-                                public @NotNull String toString(JsonElement o, int flags) {
-                                    return toVariableNameString(o);
-                                }
-
-                                @Override
-                                public @NotNull String toVariableNameString(JsonElement o) {
-                                    return o.toString();
-                                }
-                            }
-                    )
-            );
-        }
-
-        if (Classes.getExactClassInfo(JsonPrimitive.class) == null){
-            Classes.registerClass(new ClassInfo<>(JsonPrimitive.class, "jsonprimitive")
-                    .name("Json Primitive")
-                    .description("Represents a json primitive.")
-                    .user("json ?primitives?")
-                    .since("1.3")
-                    .parser(new Parser<>() {
-                                @Override
-                                public boolean canParse(@NotNull ParseContext context) {
-                                    return false;
-                                }
-                                @Override
-                                public @NotNull String toString(JsonPrimitive o, int flags) {
-                                    return toVariableNameString(o);
-                                }
-
-                                @Override
-                                public @NotNull String toVariableNameString(JsonPrimitive o) {
-                                    return o.toString();
-                                }
-                            }
-                    )
-            );
+            Converters.registerConverter(JsonArray.class, String.class, new Converter<>() {
+                @Override
+                public @Nullable String convert(JsonArray from) {
+                    return new Json(from, null).toString();
+                }
+            });
         }
     }
 }

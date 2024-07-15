@@ -18,5 +18,3 @@ types:
 
     jsonobject: json ?object¦s @a
     jsonarray: json ?array¦s @a
-    jsonelement: json ?element¦s @a
-    jsonprimitive: json ?primitive¦s @a

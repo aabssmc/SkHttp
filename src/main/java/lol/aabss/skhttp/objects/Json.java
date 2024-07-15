@@ -1,44 +1,66 @@
 package lol.aabss.skhttp.objects;
 
-import ch.njol.skript.registrations.Classes;
+import ch.njol.skript.lang.Variable;
 import com.google.gson.*;
 import lol.aabss.skhttp.SkHttp;
+import org.bukkit.event.Event;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
+import java.util.List;
+
+import static lol.aabss.skhttp.SkHttp.SKRIPT_REFLECT_SUPPORTED;
+
+@SuppressWarnings("unused")
 public class Json {
 
-    public Json(JsonElement element){
+    public Json(JsonElement element, @Nullable Event e){
         this.element = element;
+        this.event = e;
     }
 
-    public Json(){
-        this(new JsonObject());
+    Json(String key, Object value, @Nullable Event e){
+        this(new JsonObject(), e);
+        add(key, value, e);
     }
 
-    public Json(String key, Object value){
-        this(new JsonObject());
-        add(key, value);
+    public Json(boolean array, @Nullable Event e){
+        this(new JsonObject(), e);
+        if (array) this.element = new JsonArray();
     }
 
-    public Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    public JsonElement element;
+    private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    private JsonElement element;
+    @Nullable
+    private final Event event;
 
-    public JsonElement add(String key, Object value){
-        return add(key, value, true);
-    }
-
-    public JsonElement add(String key, Object value, boolean skript){
-        if (value instanceof Boolean || value instanceof Number || value instanceof String){
+    public Json add(String key, Object value, @Nullable Event e){
+        if (value instanceof Variable<?> && e != null){
+            if (((Variable<?>) value).isList()) {
+                List<?> list = Arrays.stream(((Variable<?>) value).getArray(e)).toList();
+                JsonArray array = new JsonArray();
+                for (Object object : list){
+                    array.add(new Json(key, gson.toJsonTree(object), e).add("internal_class_name", object.getClass().getName(), e).element);
+                }
+                if (element instanceof JsonObject) {
+                    ((JsonObject) element).add(key, array);
+                } else if (element instanceof JsonArray) {
+                    ((JsonArray) element).add(array);
+                }
+                return add(key, list, e);
+            } else if (((Variable<?>) value).isSingle()){
+                return add(key, ((Variable<?>) value).getSingle(e), e);
+            }
+        } else if (SKRIPT_REFLECT_SUPPORTED && value instanceof com.btk5h.skriptmirror.ObjectWrapper) {
+            return add(key, ((com.btk5h.skriptmirror.ObjectWrapper) value).get(), e);
+        } else if (value instanceof Boolean || value instanceof Number || value instanceof String || value instanceof JsonPrimitive){
             return addProperty(key, value);
         } else if (value == null){
             return addProperty(key, null);
         } else if (value instanceof Iterable<?>){
             JsonArray array = new JsonArray();
             for (Object object : (Iterable<?>) value){
-                if (Classes.getExactClassInfo(object.getClass()) != null && skript){
-                    array.add(new Json(key, Classes.toString(object)).element);
-                } else {
-                    array.add(new Json(key, gson.toJsonTree(object)).element);
-                }
+                array.add(new Json(key, gson.toJsonTree(object), e).add("internal_class_name", object.getClass().getName(), e).element);
             }
             if (element instanceof JsonObject) {
                 ((JsonObject) element).add(key, array);
@@ -46,24 +68,20 @@ public class Json {
                 ((JsonArray) element).add(array);
             }
         } else {
-            if (Classes.getExactClassInfo(value.getClass()) != null && skript){
-                if (element instanceof JsonObject) {
-                    ((JsonObject) element).addProperty(key, Classes.toString(value));
-                } else if (element instanceof JsonArray) {
-                    ((JsonArray) element).add(Classes.toString(value));
-                }
-            } else {
-                if (element instanceof JsonObject) {
-                    ((JsonObject) element).add(key, gson.toJsonTree(value));
-                } else if (element instanceof JsonArray) {
-                    ((JsonArray) element).add(gson.toJsonTree(value));
-                }
+            if (element instanceof JsonObject) {
+                JsonObject jsonObject = (JsonObject) gson.toJsonTree(value);
+                jsonObject.addProperty("internal_class_name", value.getClass().getName());
+                ((JsonObject) element).add(key, jsonObject);
+            } else if (element instanceof JsonArray) {
+                JsonObject jsonObject = (JsonObject) gson.toJsonTree(value);
+                jsonObject.addProperty("internal_class_name", value.getClass().getName());
+                ((JsonArray) element).add(jsonObject);
             }
         }
-        return element;
+        return this;
     }
 
-    public JsonElement addProperty(String key, Object value){
+    public Json addProperty(String key, Object value){
         if (value instanceof String){
             if (element instanceof JsonObject){
                 ((JsonObject) element).addProperty(key, (String) value);
@@ -89,7 +107,233 @@ public class Json {
                 ((JsonArray) element).add((JsonElement) value);
             }
         }
+        return this;
+    }
+
+    public Json removeIndex(int index){
+        if (element instanceof JsonArray){
+            ((JsonArray) element).remove(index);
+        } else if (element instanceof JsonObject){
+            ((JsonObject) element).remove((((JsonObject) element).asMap().keySet().stream().toList().get(index)));
+        }
+        return this;
+    }
+
+    public Json removeAll(Object object, Event e){
+        return remove(object, true, e);
+    }
+
+    public Json removeFirst(Object object, Event e){
+        return remove(object, false, e);
+    }
+
+    private Json remove(Object object, boolean all, Event e){
+        if (object instanceof Variable<?> && e != null){
+            if (((Variable<?>) object).isList()) {
+                List<?> list = Arrays.stream(((Variable<?>) object).getArray(e)).toList();
+                JsonArray array = new JsonArray();
+                for (Object obj : list){
+                    array.add(new Json(gson.toJsonTree(obj), e).add("internal_class_name", object.getClass().getName(), e).element);
+                }
+                return remove(list, all, e);
+            } else if (((Variable<?>) object).isSingle()){
+                return remove(((Variable<?>) object).getSingle(e), all, e);
+            }
+        } else if (SKRIPT_REFLECT_SUPPORTED && object instanceof com.btk5h.skriptmirror.ObjectWrapper) {
+            return remove(((com.btk5h.skriptmirror.ObjectWrapper) object).get(), all, e);
+        } else if (object instanceof JsonElement) {
+            if (element instanceof JsonArray) {
+                ((JsonArray) element).remove((JsonElement) object);
+            } else if (element instanceof JsonObject) {
+                for (String key : ((JsonObject) element).asMap().keySet()) {
+                    if (((JsonObject) element).asMap().get(key) == object) {
+                        ((JsonObject) element).remove(key);
+                        if (!all) break;
+                    }
+                }
+            }
+        } else if (object instanceof String){
+            if (element instanceof JsonArray) {
+                for (JsonElement jsonElement : ((JsonArray) element).asList()){
+                    if (jsonElement.isJsonPrimitive() && jsonElement.getAsJsonPrimitive().isString() && jsonElement.getAsString() == object) {
+                        ((JsonArray) element).remove(jsonElement);
+                        if (!all) break;
+                    }
+                }
+            } else if (element instanceof JsonObject) {
+                for (String key : ((JsonObject) element).asMap().keySet()) {
+                    JsonElement jsonElement = ((JsonObject) element).asMap().get(key);
+                    if (jsonElement.isJsonPrimitive() && jsonElement.getAsJsonPrimitive().isString() && jsonElement.getAsString() == object) {
+                        ((JsonObject) element).remove(key);
+                        if (!all) break;
+                    }
+                }
+            }
+        } else if (object instanceof Boolean){
+            if (element instanceof JsonArray) {
+                for (JsonElement jsonElement : ((JsonArray) element).asList()){
+                    if (jsonElement.isJsonPrimitive() && jsonElement.getAsJsonPrimitive().isBoolean() && jsonElement.getAsBoolean() == (Boolean) object) {
+                        ((JsonArray) element).remove(jsonElement);
+                        if (!all) break;
+                    }
+                }
+            } else if (element instanceof JsonObject) {
+                for (String key : ((JsonObject) element).asMap().keySet()) {
+                    JsonElement jsonElement = ((JsonObject) element).asMap().get(key);
+                    if (jsonElement.isJsonPrimitive() && jsonElement.getAsJsonPrimitive().isBoolean() && jsonElement.getAsBoolean() == (Boolean) object) {
+                        ((JsonObject) element).remove(key);
+                        if (!all) break;
+                    }
+                }
+            }
+        } else if (object instanceof Number){
+            if (element instanceof JsonArray) {
+                for (JsonElement jsonElement : ((JsonArray) element).asList()){
+                    if (jsonElement.isJsonPrimitive() && jsonElement.getAsJsonPrimitive().isNumber() && jsonElement.getAsNumber() == object) {
+                        ((JsonArray) element).remove(jsonElement);
+                        if (!all) break;
+                    }
+                }
+            } else if (element instanceof JsonObject) {
+                for (String key : ((JsonObject) element).asMap().keySet()) {
+                    JsonElement jsonElement = ((JsonObject) element).asMap().get(key);
+                    if (jsonElement.isJsonPrimitive() && jsonElement.getAsJsonPrimitive().isNumber() && jsonElement.getAsNumber() == object) {
+                        ((JsonObject) element).remove(key);
+                        if (!all) break;
+                    }
+                }
+            }
+        } else if (object instanceof Iterable<?>){
+            JsonArray array = new JsonArray();
+            for (Object obj : (Iterable<?>) object){
+                array.add(new Json(gson.toJsonTree(object), e).add("internal_class_name", object.getClass().getName(), e).element);
+            }
+            if (element instanceof JsonObject) {
+                for (String key : ((JsonObject) element).asMap().keySet()) {
+                    if (((JsonObject) element).asMap().get(key) == array) {
+                        ((JsonObject) element).remove(key);
+                        if (!all) break;
+                    }
+                }
+            } else if (element instanceof JsonArray) {
+                ((JsonArray) element).remove(array);
+            }
+        } else {
+            if (element instanceof JsonObject) {
+                for (String key : ((JsonObject) element).asMap().keySet()) {
+                    if (((JsonObject) element).asMap().get(key) == gson.toJsonTree(object)) {
+                        ((JsonObject) element).remove(key);
+                        if (!all) break;
+                    }
+                }
+            } else if (element instanceof JsonArray) {
+                ((JsonArray) element).remove(gson.toJsonTree(object));
+            }
+        }
+
+        return this;
+    }
+
+    public Object get(String key) {
+        Object object = null;
+        if (element instanceof JsonObject){
+            object = ((JsonObject) element).get(key);
+        }
+        if (object == null) return null;
+        if (object instanceof JsonObject){
+            if (((JsonObject) object).has("internal_class_name")) {
+                Class<?> clazz = null;
+                try {
+                    clazz = Class.forName(((JsonObject) object).get("internal_class_name").getAsString());
+                } catch (ClassNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
+                return gson.fromJson((JsonObject) object, clazz);
+            }
+        }
+        return object;
+    }
+
+    public Object get(Integer index) {
+        Object object = null;
+        if (element instanceof JsonObject){
+            object = (((JsonObject) element).asMap().values().stream().toList().get(index));
+        } else if (element instanceof JsonArray){
+            object = ((JsonArray) element).get(index);
+        }
+        if (object == null) return null;
+        if (object instanceof JsonObject){
+            if (((JsonObject) object).has("internal_class_name")) {
+                Class<?> clazz = null;
+                try {
+                    clazz = Class.forName(((JsonObject) object).get("internal_class_name").getAsString());
+                } catch (ClassNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
+                return gson.fromJson((JsonObject) object, clazz);
+            }
+        }
+        return object;
+    }
+
+    public JsonElement toJsonElement(Object object, Event e){
+        if (object instanceof Variable<?> && e != null){
+            if (((Variable<?>) object).isList()) {
+                List<?> list = Arrays.stream(((Variable<?>) object).getArray(e)).toList();
+                JsonArray array = new JsonArray();
+                for (Object obj : list){
+                    array.add(new Json(gson.toJsonTree(obj), e).add("internal_class_name", obj.getClass().getName(), e).element);
+                }
+                return toJsonElement(list, e);
+            } else if (((Variable<?>) object).isSingle()){
+                return toJsonElement(((Variable<?>) object).getSingle(e), e);
+            }
+        } else if (SKRIPT_REFLECT_SUPPORTED && object instanceof com.btk5h.skriptmirror.ObjectWrapper) {
+            return toJsonElement(((com.btk5h.skriptmirror.ObjectWrapper) object).get(), e);
+        } else if (object == null){
+            return JsonNull.INSTANCE;
+        } else if (object instanceof Iterable<?>){
+            JsonArray array = new JsonArray();
+            for (Object obj : (Iterable<?>) object){
+                array.add(new Json(gson.toJsonTree(object), e).add("internal_class_name", object.getClass().getName(), e).element);
+            }
+            return array;
+        } else {
+            if (element instanceof JsonObject) {
+                JsonObject jsonObject = (JsonObject) gson.toJsonTree(object);
+                jsonObject.addProperty("internal_class_name", object.getClass().getName());
+                return jsonObject;
+            } else if (element instanceof JsonArray) {
+                JsonObject jsonObject = (JsonObject) gson.toJsonTree(object);
+                jsonObject.addProperty("internal_class_name", object.getClass().getName());
+                return jsonObject;
+            }
+        }
+        return new JsonObject();
+    }
+
+    public boolean has(Object object, Event e){
+        if (!(object instanceof JsonElement)) {
+            object = toJsonElement(object, e);
+        }
+        if (element instanceof JsonObject){
+            for (JsonElement element : ((JsonObject) element).asMap().values()){
+                if (element.equals(object)) {
+                    return true;
+                }
+            }
+        } else {
+            return ((JsonArray) element).contains(toJsonElement(object, e));
+        }
+        return false;
+    }
+
+    public JsonElement getElement(){
         return element;
+    }
+
+    public @Nullable Event getEvent(){
+        return event;
     }
 
     public String toString() {
