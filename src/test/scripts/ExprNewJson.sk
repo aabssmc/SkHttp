@@ -1,0 +1,4 @@
+test "ExprNewJson":
+    assert {_json} is not set with "Json does not exist"
+    set {_json} to new json object
+    assert {_json} is set with "Json does exist"
