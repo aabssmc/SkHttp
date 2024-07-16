@@ -342,7 +342,20 @@ public class Json {
         return new JsonObject();
     }
 
-    public boolean has(Object object, Event e){
+    public boolean hasKey(String key, Event e){
+        if (element instanceof JsonObject){
+            for (String jsonKey : ((JsonObject) element).asMap().keySet()){
+                if (key.equals(jsonKey)) {
+                    return true;
+                }
+            }
+        } else {
+            return ((JsonArray) element).contains(toJsonElement(key, e));
+        }
+        return false;
+    }
+
+    public boolean hasValue(Object object, Event e){
         if (!(object instanceof JsonElement)) {
             object = toJsonElement(object, e);
         }
