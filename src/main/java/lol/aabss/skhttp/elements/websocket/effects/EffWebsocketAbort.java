@@ -5,9 +5,9 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.util.AsyncEffect;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
@@ -21,7 +21,7 @@ import java.net.http.WebSocket;
         "abort last websocket"
 })
 @Since("1.3")
-public class EffWebsocketAbort extends Effect {
+public class EffWebsocketAbort extends AsyncEffect {
 
     static {
         Skript.registerEffect(EffWebsocketAbort.class,

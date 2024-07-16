@@ -8,6 +8,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.util.AsyncEffect;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
@@ -26,7 +27,7 @@ import java.nio.ByteBuffer;
         "post last text \"hello\" by {_websockets::*}"
 })
 @Since("1.3")
-public class EffWebsocketSendStatus extends Effect {
+public class EffWebsocketSendStatus extends AsyncEffect {
 
     static {
         Skript.registerEffect(EffWebsocketSendStatus.class,

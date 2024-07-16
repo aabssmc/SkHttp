@@ -40,14 +40,10 @@ public class ExprNewJson extends SimpleExpression<Object> {
     @Override
     protected Object @NotNull [] get(@NotNull Event e) {
         if (object != null){
-            SkHttp.LOGGER.error("object not null");
             object = (Expression<Object>) object.getConvertedExpression(Object.class);
-            SkHttp.LOGGER.error("convert expression");
             if (object == null){
-                SkHttp.LOGGER.error("object now null");
                 return get(e);
             }
-            SkHttp.LOGGER.error("object still not null");
             Object object;
             if (this.object.isSingle()) {
                 object = this.object.getSingle(e);
@@ -55,15 +51,12 @@ public class ExprNewJson extends SimpleExpression<Object> {
                 object = this.object.getArray(e);
             }
             if (object != null){
-                SkHttp.LOGGER.error("object still isnt null so return ogod");
                 return new Object[]{Json.toJsonElement(object, e)};
             }
         }
         if (array) {
-            SkHttp.LOGGER.error("jsonarray");
             return new Object[]{new JsonArray()};
         }
-        SkHttp.LOGGER.error("jsonobject");
         return new Object[]{new JsonObject()};
     }
 
