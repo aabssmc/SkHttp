@@ -51,4 +51,3 @@ jobs:
         with:
           test_script_directory: src/test/scripts
           skript_repo_ref: 2.8.5
-          extra_plugins_directory: extra-plugins/
