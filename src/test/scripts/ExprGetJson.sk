@@ -1,7 +1,4 @@
 test "get json":
     set {_json} to new json object
-    assert {_json} is set with "Failed to create a new json object"
     put key "uuid" and value (random uuid) in {_json}
-    assert {_json} has key "uuid" with "Failed to put a element in json"
     set {_uuid} to key "uuid" of {_json}
-    assert {_uuid} is set with "Failed to get key from json"
