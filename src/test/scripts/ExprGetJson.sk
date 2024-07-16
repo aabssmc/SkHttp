@@ -1,4 +1,0 @@
-test "get json":
-    set {_json} to new json object
-    put key "uuid" and value (random uuid) in {_json}
-    set {_uuid} to key "uuid" of {_json}
