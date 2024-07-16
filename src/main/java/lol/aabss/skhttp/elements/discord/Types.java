@@ -5,10 +5,10 @@ import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
 import com.itsradiix.discordwebhook.DiscordWebHook;
-import com.itsradiix.discordwebhook.embed.Embed;
-import com.itsradiix.discordwebhook.embed.models.Author;
-import com.itsradiix.discordwebhook.embed.models.Field;
-import com.itsradiix.discordwebhook.embed.models.Footer;
+import com.itsradiix.discordwebhook.models.embeds.Author;
+import com.itsradiix.discordwebhook.models.embeds.Embed;
+import com.itsradiix.discordwebhook.models.embeds.Field;
+import com.itsradiix.discordwebhook.models.embeds.Footer;
 import org.jetbrains.annotations.NotNull;
 
 public class Types {
@@ -32,7 +32,7 @@ public class Types {
 
                             @Override
                             public @NotNull String toVariableNameString(DiscordWebHook o) {
-                                return o.getContent();
+                                return "discord webhooks";
                             }
                         }
                 )

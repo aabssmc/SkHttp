@@ -5,15 +5,18 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.util.AsyncEffect;
 import ch.njol.util.Kleenean;
 import com.itsradiix.discordwebhook.DiscordWebHook;
+import lol.aabss.skhttp.SkHttp;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.io.IOException;
 
 @Name("Send Discord Webhook")
 @Description("Sends strings to a discord webhook.")
@@ -39,12 +42,19 @@ public class EffSendDiscordWebhook extends AsyncEffect {
             if (url != null) {
                 Object text = this.text.getSingle(e);
                 if (text instanceof String t) {
-                    DiscordWebHook message = new DiscordWebHook.Builder()
-                            .content(t)
-                            .build();
-                    DiscordWebHook.sendMessage(url, message);
+                    DiscordWebHook message = new DiscordWebHook().content(t);
+                    try (CloseableHttpResponse response = message.sendToDiscord(url)) {
+                        SkHttp.LOGGER.log(response.getCode());
+                    } catch (IOException x){
+                        throw new RuntimeException(x);
+                    }
+                    message.sendToDiscord(url);
                 } else if (text instanceof DiscordWebHook t){
-                    DiscordWebHook.sendMessage(url, t);
+                     try (CloseableHttpResponse response = t.sendToDiscord(url)) {
+                         SkHttp.LOGGER.log(response.getCode());
+                     } catch (IOException x){
+                        throw new RuntimeException(x);
+                     }
                 }
             }
         }

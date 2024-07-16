@@ -9,10 +9,7 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.*;
 import ch.njol.util.Kleenean;
-import com.itsradiix.discordwebhook.embed.Embed;
-import com.itsradiix.discordwebhook.embed.models.Author;
-import com.itsradiix.discordwebhook.embed.models.Field;
-import com.itsradiix.discordwebhook.embed.models.Footer;
+import com.itsradiix.discordwebhook.models.embeds.*;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -20,6 +17,7 @@ import org.skriptlang.skript.lang.entry.EntryContainer;
 import org.skriptlang.skript.lang.entry.EntryValidator;
 import org.skriptlang.skript.lang.entry.util.ExpressionEntryData;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Name("Discord Webhook Embed Builder")
@@ -46,7 +44,7 @@ public class SecEmbedBuilder extends Section {
     private Expression<String> description;
     private Expression<String> url;
     private Expression<String> color;
-    private Expression<Boolean> timestamp;
+    private Expression<String> timestamp;
     private Expression<Footer> footer;
     private Expression<String> thumbnail;
     private Expression<String> image;
@@ -62,7 +60,7 @@ public class SecEmbedBuilder extends Section {
         ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("description", null, true, String.class));
         ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("url", null, true, String.class));
         ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("color", null, true, String.class));
-        ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("timestamp", null, true, Boolean.class));
+        ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("timestamp", null, true, String.class));
         ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("footer", null, true, Footer.class));
         ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("thumbnail", null, true, String.class));
         ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("image", null, true, String.class));
@@ -79,7 +77,7 @@ public class SecEmbedBuilder extends Section {
         this.description = (Expression<String>) container.getOptional("description", false);
         this.url = (Expression<String>) container.getOptional("url", false);
         this.color = (Expression<String>) container.getOptional("color", false);
-        this.timestamp = (Expression<Boolean>) container.getOptional("timestamp", false);
+        this.timestamp = (Expression<String>) container.getOptional("timestamp", false);
         this.footer = (Expression<Footer>) container.getOptional("footer", false);
         this.thumbnail = (Expression<String>) container.getOptional("thumbnail", false);
         this.image = (Expression<String>) container.getOptional("image", false);
@@ -105,8 +103,8 @@ public class SecEmbedBuilder extends Section {
         if (var == null) {
             return;
         }
-        Embed.Builder builder;
-        builder = new Embed.Builder();
+        Embed builder;
+        builder = new Embed();
         if (title != null){
             String title = this.title.getSingle(e);
             if (title != null){
@@ -122,58 +120,49 @@ public class SecEmbedBuilder extends Section {
         if (url != null){
             String url = this.url.getSingle(e);
             if (url != null){
-                builder = builder.url(url);
+                builder = builder.setUrl(url);
             }
         }
         if (color != null){
             String color = this.color.getSingle(e);
             if (color != null){
-                builder = builder.color(color);
+                builder = builder.setColor(color);
             }
         }
         if (timestamp != null){
-            if (Boolean.TRUE.equals(this.timestamp.getSingle(e))) {
-                builder = builder.timestamp();
+            String timestamp = this.timestamp.getSingle(e);
+            if (timestamp != null) {
+                builder = builder.setTimestamp(timestamp);
             }
         }
         if (footer != null){
             Footer footer = this.footer.getSingle(e);
             if (footer != null){
-                if (footer.getIcon_url() != null) {
-                    builder = builder.footer(footer.getText(), footer.getIcon_url());
-                } else{
-                    builder = builder.footer(footer.getText());
-                }
+                builder = builder.setFooter(footer);
             }
         }
         if (thumbnail != null){
             String thumbnail = this.thumbnail.getSingle(e);
             if (thumbnail != null){
-                builder = builder.thumbnail(thumbnail);
+                builder = builder.setThumbnail(new Thumbnail(thumbnail, null));
             }
         }
         if (image != null){
             String image = this.image.getSingle(e);
             if (image != null){
-                builder = builder.image(image);
+                builder = builder.setImage(new Image(image, null));
             }
         }
         if (author != null){
             Author author = this.author.getSingle(e);
             if (author != null){
-                if (author.getIcon_url() != null) {
-                    builder = builder.author(author.getName(), author.getUrl(), author.getIcon_url());
-                } else{
-                    builder = builder.author(author.getName(), author.getUrl());
-                }
+                builder = builder.setAuthor(author);
             }
         }
         if (fields != null){
-            for (Field field : fields.getArray(e)){
-                builder = builder.field(field.getName(), field.getValue(), field.isInline());
-            }
+            builder = builder.setFields(Arrays.stream(fields.getArray(e)).toList());
         }
-        var.change(e, new Embed[]{builder.build()}, Changer.ChangeMode.SET);
+        var.change(e, new Embed[]{builder}, Changer.ChangeMode.SET);
     }
 
     @Override

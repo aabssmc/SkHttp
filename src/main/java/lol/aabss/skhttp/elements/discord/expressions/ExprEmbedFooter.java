@@ -10,7 +10,7 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import com.itsradiix.discordwebhook.embed.models.Footer;
+import com.itsradiix.discordwebhook.models.embeds.Footer;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -39,10 +39,10 @@ public class ExprEmbedFooter extends SimpleExpression<Footer> {
             if (url != null){
                 String url = this.url.getSingle(e);
                 if (url != null){
-                    return new Footer[]{new Footer(text, url)};
+                    return new Footer[]{new Footer(text, url, null)};
                 }
             } else{
-                return new Footer[]{new Footer(text)};
+                return new Footer[]{new Footer(text, null, null)};
             }
         }
         return new Footer[]{};

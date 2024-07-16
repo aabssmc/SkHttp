@@ -10,7 +10,7 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import com.itsradiix.discordwebhook.embed.models.Author;
+import com.itsradiix.discordwebhook.models.embeds.Author;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -41,10 +41,10 @@ public class ExprEmbedAuthor extends SimpleExpression<Author> {
             if (icon != null){
                 String icon = this.icon.getSingle(e);
                 if (icon != null){
-                    return new Author[]{new Author(text, url, icon)};
+                    return new Author[]{new Author(text, url, icon, null)};
                 }
             } else{
-                return new Author[]{new Author(text, url)};
+                return new Author[]{new Author(text, url, null, null)};
             }
         }
         return new Author[]{};
