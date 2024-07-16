@@ -31,6 +31,8 @@ jobs:
         uses: actions/checkout@v2
       - name: Download artifacts
         uses: actions/download-artifact@v4
+        with:
+          path: build/libs
       - name: Run tests
         uses: SkriptLang/skript-test-action@v1.1
         with:
