@@ -1,6 +1,10 @@
 package lol.aabss.skhttp.elements.json.effects;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Examples;
+import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
@@ -12,6 +16,14 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@Name("Json - Json Edit")
+@Description("Adds/Removes elements from a json object/array")
+@Examples({
+        "add key \"uuid\" value random uuid in {_json}",
+        "remove all 123 in {_jsonObject}",
+        "remove object at index 1 in {_jsonArray}"
+})
+@Since("1.4")
 public class EffJsonEdit extends Effect {
 
     static {
@@ -107,3 +119,4 @@ public class EffJsonEdit extends Effect {
         return true;
     }
 }
+

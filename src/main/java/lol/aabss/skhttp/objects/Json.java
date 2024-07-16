@@ -19,7 +19,7 @@ public class Json {
         this.event = e;
     }
 
-    Json(String key, Object value, @Nullable Event e){
+    private Json(String key, Object value, @Nullable Event e){
         this(new JsonObject(), e);
         add(key, value, e);
     }
@@ -29,7 +29,7 @@ public class Json {
         if (array) this.element = new JsonArray();
     }
 
-    private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    public static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private JsonElement element;
     @Nullable
     private final Event event;
@@ -40,7 +40,11 @@ public class Json {
                 List<?> list = Arrays.stream(((Variable<?>) value).getArray(e)).toList();
                 JsonArray array = new JsonArray();
                 for (Object object : list){
-                    array.add(new Json(key, gson.toJsonTree(object), e).add("internal_class_name", object.getClass().getName(), e).element);
+                    Json json = new Json(gson.toJsonTree(object), e);
+                    if (json.getElement() instanceof JsonObject){
+                        json = json.add("internal_class_name", object.getClass().getName(), e);
+                    }
+                    array.add(json.element);
                 }
                 if (element instanceof JsonObject) {
                     ((JsonObject) element).add(key, array);
@@ -60,7 +64,11 @@ public class Json {
         } else if (value instanceof Iterable<?>){
             JsonArray array = new JsonArray();
             for (Object object : (Iterable<?>) value){
-                array.add(new Json(key, gson.toJsonTree(object), e).add("internal_class_name", object.getClass().getName(), e).element);
+                Json json = new Json(gson.toJsonTree(object), e);
+                if (json.getElement() instanceof JsonObject){
+                    json = json.add("internal_class_name", object.getClass().getName(), e);
+                }
+                array.add(json.element);
             }
             if (element instanceof JsonObject) {
                 ((JsonObject) element).add(key, array);
@@ -69,12 +77,16 @@ public class Json {
             }
         } else {
             if (element instanceof JsonObject) {
-                JsonObject jsonObject = (JsonObject) gson.toJsonTree(value);
-                jsonObject.addProperty("internal_class_name", value.getClass().getName());
+                JsonElement jsonObject = gson.toJsonTree(value);
+                if (jsonObject instanceof JsonObject) {
+                    ((JsonObject) jsonObject).addProperty("internal_class_name", value.getClass().getName());
+                }
                 ((JsonObject) element).add(key, jsonObject);
             } else if (element instanceof JsonArray) {
-                JsonObject jsonObject = (JsonObject) gson.toJsonTree(value);
-                jsonObject.addProperty("internal_class_name", value.getClass().getName());
+                JsonElement jsonObject = gson.toJsonTree(value);
+                if (jsonObject instanceof JsonObject) {
+                    ((JsonObject) jsonObject).addProperty("internal_class_name", value.getClass().getName());
+                }
                 ((JsonArray) element).add(jsonObject);
             }
         }
@@ -133,7 +145,11 @@ public class Json {
                 List<?> list = Arrays.stream(((Variable<?>) object).getArray(e)).toList();
                 JsonArray array = new JsonArray();
                 for (Object obj : list){
-                    array.add(new Json(gson.toJsonTree(obj), e).add("internal_class_name", object.getClass().getName(), e).element);
+                    Json json = new Json(gson.toJsonTree(object), e);
+                    if (json.getElement() instanceof JsonObject){
+                        json = json.add("internal_class_name", object.getClass().getName(), e);
+                    }
+                    array.add(json.element);
                 }
                 return remove(list, all, e);
             } else if (((Variable<?>) object).isSingle()){
@@ -206,7 +222,11 @@ public class Json {
         } else if (object instanceof Iterable<?>){
             JsonArray array = new JsonArray();
             for (Object obj : (Iterable<?>) object){
-                array.add(new Json(gson.toJsonTree(object), e).add("internal_class_name", object.getClass().getName(), e).element);
+                Json json = new Json(gson.toJsonTree(object), e);
+                if (json.getElement() instanceof JsonObject){
+                    json = json.add("internal_class_name", object.getClass().getName(), e);
+                }
+                array.add(json.element);
             }
             if (element instanceof JsonObject) {
                 for (String key : ((JsonObject) element).asMap().keySet()) {
@@ -256,10 +276,14 @@ public class Json {
 
     public Object get(Integer index) {
         Object object = null;
-        if (element instanceof JsonObject){
-            object = (((JsonObject) element).asMap().values().stream().toList().get(index));
-        } else if (element instanceof JsonArray){
-            object = ((JsonArray) element).get(index);
+        try {
+            if (element instanceof JsonObject) {
+                object = (((JsonObject) element).asMap().values().stream().toList().get(index));
+            } else if (element instanceof JsonArray) {
+                object = ((JsonArray) element).get(index);
+            }
+        } catch (IndexOutOfBoundsException ignored){
+            return null;
         }
         if (object == null) return null;
         if (object instanceof JsonObject){
@@ -276,13 +300,17 @@ public class Json {
         return object;
     }
 
-    public JsonElement toJsonElement(Object object, Event e){
+    public static JsonElement toJsonElement(Object object, Event e){
         if (object instanceof Variable<?> && e != null){
             if (((Variable<?>) object).isList()) {
                 List<?> list = Arrays.stream(((Variable<?>) object).getArray(e)).toList();
                 JsonArray array = new JsonArray();
                 for (Object obj : list){
-                    array.add(new Json(gson.toJsonTree(obj), e).add("internal_class_name", obj.getClass().getName(), e).element);
+                    Json json = new Json(gson.toJsonTree(object), e);
+                    if (json.getElement() instanceof JsonObject){
+                        json = json.add("internal_class_name", object.getClass().getName(), e);
+                    }
+                    array.add(json.element);
                 }
                 return toJsonElement(list, e);
             } else if (((Variable<?>) object).isSingle()){
@@ -292,22 +320,24 @@ public class Json {
             return toJsonElement(((com.btk5h.skriptmirror.ObjectWrapper) object).get(), e);
         } else if (object == null){
             return JsonNull.INSTANCE;
-        } else if (object instanceof Iterable<?>){
+        } else if (object instanceof Iterable<?>) {
             JsonArray array = new JsonArray();
-            for (Object obj : (Iterable<?>) object){
-                array.add(new Json(gson.toJsonTree(object), e).add("internal_class_name", object.getClass().getName(), e).element);
+            for (Object obj : (Iterable<?>) object) {
+                Json json = new Json(gson.toJsonTree(object), e);
+                if (json.getElement() instanceof JsonObject){
+                    json = json.add("internal_class_name", object.getClass().getName(), e);
+                }
+                array.add(json.element);
             }
             return array;
+        } else if (object instanceof String){
+            return JsonParser.parseString((String) object);
         } else {
-            if (element instanceof JsonObject) {
-                JsonObject jsonObject = (JsonObject) gson.toJsonTree(object);
-                jsonObject.addProperty("internal_class_name", object.getClass().getName());
-                return jsonObject;
-            } else if (element instanceof JsonArray) {
-                JsonObject jsonObject = (JsonObject) gson.toJsonTree(object);
-                jsonObject.addProperty("internal_class_name", object.getClass().getName());
-                return jsonObject;
+            JsonElement json = gson.toJsonTree(object);
+            if (json instanceof JsonObject) {
+                ((JsonObject) json).addProperty("internal_class_name", object.getClass().getName());
             }
+            return json;
         }
         return new JsonObject();
     }

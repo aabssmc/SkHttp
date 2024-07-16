@@ -12,7 +12,8 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import lol.aabss.skhttp.SkHttp;
+import lol.aabss.skhttp.objects.Json;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -29,24 +30,40 @@ public class ExprNewJson extends SimpleExpression<Object> {
     static {
         Skript.registerExpression(ExprNewJson.class, Object.class, ExpressionType.COMBINED,
                 "[a] [new] json[ ](object|:array)",
-                "json[[ ](object|array)] from string %string%"
+                "json[[ ](object|array)] from [string|object] %objects%"
         );
     }
 
     private boolean array;
-    private Expression<String> string;
+    private Expression<Object> object;
 
     @Override
     protected Object @NotNull [] get(@NotNull Event e) {
-        if (string != null){
-            String string = this.string.getSingle(e);
-            if (string != null){
-                return new Object[]{JsonParser.parseString(string)};
+        if (object != null){
+            SkHttp.LOGGER.error("object not null");
+            object = (Expression<Object>) object.getConvertedExpression(Object.class);
+            SkHttp.LOGGER.error("convert expression");
+            if (object == null){
+                SkHttp.LOGGER.error("object now null");
+                return get(e);
+            }
+            SkHttp.LOGGER.error("object still not null");
+            Object object;
+            if (this.object.isSingle()) {
+                object = this.object.getSingle(e);
+            } else {
+                object = this.object.getArray(e);
+            }
+            if (object != null){
+                SkHttp.LOGGER.error("object still isnt null so return ogod");
+                return new Object[]{Json.toJsonElement(object, e)};
             }
         }
         if (array) {
+            SkHttp.LOGGER.error("jsonarray");
             return new Object[]{new JsonArray()};
         }
+        SkHttp.LOGGER.error("jsonobject");
         return new Object[]{new JsonObject()};
     }
 
@@ -68,7 +85,7 @@ public class ExprNewJson extends SimpleExpression<Object> {
     @Override
     public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
         array = parseResult.hasTag("array");
-        if (matchedPattern == 1) string = (Expression<String>) exprs[0];
+        if (matchedPattern == 1) object = (Expression<Object>) exprs[0];
         return true;
     }
 }

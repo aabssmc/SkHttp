@@ -39,7 +39,7 @@ public class CondJsonHas extends Condition {
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean debug) {
-        return "";
+        return "json has value";
     }
 
     @Override
