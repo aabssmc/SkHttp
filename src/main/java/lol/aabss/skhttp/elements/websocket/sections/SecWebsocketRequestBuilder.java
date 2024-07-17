@@ -35,14 +35,14 @@ import java.util.regex.Pattern;
         "Use WebsocketOpenEvent in order to do actions when opened."
 })
 @Examples({
-        "make websocket with url \"wss://something.com/websocket\" and store it in {_websocket}",
+        "make websocket request with url \"wss://something.com/websocket\" and store it in {_websocket}",
         "\theaders:",
         "\t\tkey: value",
         "\t\tanotherkey: anothervalue",
         "send websocket with url \"ws://example.com\" and store it in {_example}"
 })
 @Since("1.3")
-public class SecWebsocketBuilder extends EffectSection {
+public class SecWebsocketRequestBuilder extends EffectSection {
 
     private static final EntryValidator.EntryValidatorBuilder ENTRY_VALIDATOR = EntryValidator.builder();
     private static final Pattern VARIABLE_PATTERN = Pattern.compile("\\{(.*?)}");
@@ -52,8 +52,8 @@ public class SecWebsocketBuilder extends EffectSection {
     private Variable<?> var;
 
     static {
-        Skript.registerSection(SecWebsocketBuilder.class,
-                "(register|make) [a] [new] websocket with [ur(l|i)] %string% and store it in %object%"
+        Skript.registerSection(SecWebsocketRequestBuilder.class,
+                "(register|make|send) [a] [new] websocket request with [ur(l|i)] %string% and store it in %object%"
         );
         ENTRY_VALIDATOR.addSection("headers", true);
     }

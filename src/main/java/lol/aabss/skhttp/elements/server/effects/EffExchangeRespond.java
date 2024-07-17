@@ -5,9 +5,9 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
+import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
-import ch.njol.skript.util.AsyncEffect;
 import ch.njol.util.Kleenean;
 import lol.aabss.skhttp.elements.server.sections.SecCreateEndpoint;
 import lol.aabss.skhttp.objects.server.HttpExchange;
@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
         "\t\trespond with code 200 and message \"{\"\"amount\"\": %{amount}%}\""
 })
 @Since("1.3")
-public class EffExchangeRespond extends AsyncEffect {
+public class EffExchangeRespond extends Effect {
 
     static {
         Skript.registerEffect(EffExchangeRespond.class,

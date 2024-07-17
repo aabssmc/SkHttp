@@ -11,8 +11,8 @@ import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import lol.aabss.skhttp.SkHttp;
 import lol.aabss.skhttp.objects.Json;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
@@ -25,10 +25,10 @@ import org.jetbrains.annotations.Nullable;
         "set {_array} to a json array"
 })
 @Since("1.4")
-public class ExprNewJson extends SimpleExpression<Object> {
+public class ExprNewJson extends SimpleExpression<JsonElement> {
 
     static {
-        Skript.registerExpression(ExprNewJson.class, Object.class, ExpressionType.COMBINED,
+        Skript.registerExpression(ExprNewJson.class, JsonElement.class, ExpressionType.COMBINED,
                 "[a] [new] json[ ](object|:array)",
                 "json[[ ](object|array)] from [string|object] %objects%"
         );
@@ -38,7 +38,7 @@ public class ExprNewJson extends SimpleExpression<Object> {
     private Expression<Object> object;
 
     @Override
-    protected Object @NotNull [] get(@NotNull Event e) {
+    protected JsonElement @NotNull [] get(@NotNull Event e) {
         if (object != null){
             object = (Expression<Object>) object.getConvertedExpression(Object.class);
             if (object == null){
@@ -51,13 +51,13 @@ public class ExprNewJson extends SimpleExpression<Object> {
                 object = this.object.getArray(e);
             }
             if (object != null){
-                return new Object[]{Json.toJsonElement(object, e)};
+                return new JsonElement[]{Json.toJsonElement(object, e)};
             }
         }
         if (array) {
-            return new Object[]{new JsonArray()};
+            return new JsonElement[]{new JsonArray()};
         }
-        return new Object[]{new JsonObject()};
+        return new JsonElement[]{new JsonObject()};
     }
 
     @Override
@@ -66,7 +66,7 @@ public class ExprNewJson extends SimpleExpression<Object> {
     }
 
     @Override
-    public @NotNull Class<?> getReturnType() {
+    public @NotNull Class<? extends JsonElement> getReturnType() {
         return (array ? JsonArray.class : JsonObject.class);
     }
 

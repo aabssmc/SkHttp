@@ -16,7 +16,7 @@ public class Types {
         Classes.registerClass(new ClassInfo<>(HttpContext.class, "httpcontext")
                 .name("Http Context")
                 .description("Represents a http context.")
-                .user("http ?contexts?")
+                .user("https? ?contexts?")
                 .since("1.3")
                 .parser(new Parser<>() {
                             @Override
@@ -39,7 +39,7 @@ public class Types {
         Classes.registerClass(new ClassInfo<>(HttpExchange.class, "httpexchange")
                 .name("Http Exchange")
                 .description("Represents a http exchange.")
-                .user("http ?exchanges?")
+                .user("https? ?exchanges?")
                 .since("1.3")
                 .parser(new Parser<>() {
                             @Override
@@ -62,7 +62,7 @@ public class Types {
         Classes.registerClass(new ClassInfo<>(HttpHandler.class, "httphandler")
                 .name("Http Handler")
                 .description("Represents a http handler.")
-                .user("http ?handlers?")
+                .user("https? ?handlers?")
                 .since("1.3")
                 .parser(new Parser<>() {
                             @Override
@@ -85,7 +85,7 @@ public class Types {
         Classes.registerClass(new ClassInfo<>(HttpServer.class, "httpserver")
                 .name("Http Server")
                 .description("Represents a http server.")
-                .user("http ?servers?")
+                .user("https? ?servers?")
                 .since("1.3")
                 .parser(new Parser<>() {
                             @Override

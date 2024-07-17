@@ -28,7 +28,7 @@ public class ExprLastHttpExchange extends SimpleExpression<HttpExchange> {
 
     static {
         Skript.registerExpression(ExprLastHttpExchange.class, HttpExchange.class, ExpressionType.SIMPLE,
-                "[the] last [http] exchange"
+                "[the] last [http[s]] exchange"
         );
     }
 

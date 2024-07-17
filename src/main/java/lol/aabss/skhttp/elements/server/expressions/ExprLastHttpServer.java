@@ -28,7 +28,7 @@ public class ExprLastHttpServer extends SimpleExpression<HttpServer> {
 
     static {
         Skript.registerExpression(ExprLastHttpServer.class, HttpServer.class, ExpressionType.SIMPLE,
-                "[the] last [http] server"
+                "[the] last [http[s]] server"
         );
     }
 

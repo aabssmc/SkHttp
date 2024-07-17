@@ -3,7 +3,6 @@ package lol.aabss.skhttp.objects.server;
 import com.google.gson.*;
 import com.sun.net.httpserver.Headers;
 import lol.aabss.skhttp.SkHttp;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.OutputStream;

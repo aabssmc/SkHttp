@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 public class ExprExchangeProtocol extends SimplePropertyExpression<HttpExchange, String> {
 
     static {
-        register(ExprExchangeProtocol.class, String.class, "[http] protocol", "httpexchanges");
+        register(ExprExchangeProtocol.class, String.class, "[http[s]] protocol", "httpexchanges");
     }
 
     @Override

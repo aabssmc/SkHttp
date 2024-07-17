@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 public class ExprHttpContextServer extends SimplePropertyExpression<HttpContext, HttpServer> {
 
     static {
-        register(ExprHttpContextServer.class, HttpServer.class, "http server", "httpcontexts");
+        register(ExprHttpContextServer.class, HttpServer.class, "http[s] server", "httpcontexts");
     }
 
     @Override

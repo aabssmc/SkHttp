@@ -26,7 +26,7 @@ public class ExprEventExchange extends SimpleExpression<HttpExchange> {
 
     static {
         Skript.registerExpression(ExprEventExchange.class, HttpExchange.class, ExpressionType.SIMPLE,
-                "[the] [event-][http[ |-]]exchange"
+                "[the] [event-][http[s][ |-]]exchange"
         );
     }
 

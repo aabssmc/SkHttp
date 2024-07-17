@@ -28,7 +28,7 @@ public class ExprLastHttpContext extends SimpleExpression<HttpContext> {
 
     static {
         Skript.registerExpression(ExprLastHttpContext.class, HttpContext.class, ExpressionType.SIMPLE,
-                "[the] last [http] context"
+                "[the] last [http[s]] context"
         );
     }
 
