@@ -12,6 +12,7 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Kleenean;
 import com.google.gson.JsonElement;
 import lol.aabss.skhttp.objects.Json;
+import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -27,9 +28,11 @@ import org.jetbrains.annotations.Nullable;
 public class CondJsonHas extends Condition {
 
     static {
-        Skript.registerCondition(CondJsonHas.class,
-                "%jsonarrays/jsonobjects% (has|contains) (value|:key) %object%"
-        );
+        if (Bukkit.getPluginManager().getPlugin("SkJson") == null) {
+            Skript.registerCondition(CondJsonHas.class,
+                    "%jsonarrays/jsonobjects% (has|contains) (value|:key) %object%"
+            );
+        }
     }
 
     private Expression<JsonElement> json;

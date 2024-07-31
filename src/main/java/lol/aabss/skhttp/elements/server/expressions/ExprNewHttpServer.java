@@ -12,10 +12,12 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import lol.aabss.skhttp.SkHttp;
 import lol.aabss.skhttp.objects.server.HttpServer;
+import lol.aabss.skhttp.objects.server.HttpsServer;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.IOException;
 import java.util.Random;
 
 @Name("New Http Server")
@@ -28,7 +30,7 @@ public class ExprNewHttpServer extends SimpleExpression<HttpServer> {
 
     static {
         Skript.registerExpression(ExprNewHttpServer.class, HttpServer.class, ExpressionType.COMBINED,
-                "[a] [new] http server [with port %-integer%]"
+                "[a] [new] http[s] server [with port %-integer%]"
         );
     }
 
@@ -39,18 +41,18 @@ public class ExprNewHttpServer extends SimpleExpression<HttpServer> {
         int defaultPort = SkHttp.instance.getConfig().getInt("default-server-port", -1);
         if (port != null) {
             Integer port = this.port.getSingle(e);
-            if (port == null) {
-                if (defaultPort != -1) {
-                    return new HttpServer[]{new HttpServer(defaultPort)};
-                }
-                return new HttpServer[]{new HttpServer(new Random().nextInt(1024, 99999))};
+            if (port != null) {
+                return server(port);
             }
-            return new HttpServer[]{new HttpServer(port)};
         }
         if (defaultPort != -1) {
-            return new HttpServer[]{new HttpServer(defaultPort)};
+            return server(defaultPort);
         }
-        return new HttpServer[]{new HttpServer(new Random().nextInt(1024, 99999))};
+        return server(new Random().nextInt(1024, 99999));
+    }
+
+    private HttpServer[] server(int port){
+        return new HttpServer[]{new HttpServer(port)};
     }
 
     @Override

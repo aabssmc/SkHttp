@@ -12,6 +12,7 @@ import ch.njol.skript.lang.UnparsedLiteral;
 import ch.njol.util.Kleenean;
 import com.google.gson.JsonElement;
 import lol.aabss.skhttp.objects.Json;
+import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -27,11 +28,13 @@ import org.jetbrains.annotations.Nullable;
 public class EffJsonEdit extends Effect {
 
     static {
-        Skript.registerEffect(EffJsonEdit.class,
-                "(put|add) [[key] %-string% [and]] [value] %object% in %jsonobjects/jsonarrays%",
-                "remove [:first|all] %object% in %jsonarrays/jsonobjects%",
-                "remove [object at] index [of] %integer% in %jsonarrays/jsonobjects%"
-        );
+        if (Bukkit.getPluginManager().getPlugin("SkJson") == null) {
+            Skript.registerEffect(EffJsonEdit.class,
+                    "(put|add) [[key] %-string% [and]] [value] %object% in %jsonobjects/jsonarrays%",
+                    "remove [:first|all] %object% in %jsonarrays/jsonobjects%",
+                    "remove [object at] index [of] %integer% in %jsonarrays/jsonobjects%"
+            );
+        }
     }
 
     private int matchedPattern;

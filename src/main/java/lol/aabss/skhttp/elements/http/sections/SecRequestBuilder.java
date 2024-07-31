@@ -175,6 +175,11 @@ public class SecRequestBuilder extends Section {
                 default: request.method(method, publisher);
             }
         } else {
+            this.body = (Expression<Object>) this.body.getConvertedExpression(this.body.getReturnType());
+            if (this.body == null){
+                execute(e);
+                return;
+            }
             Object body = this.body.getSingle(e);
             if (body != null) {
                 request = HttpRequest.newBuilder()

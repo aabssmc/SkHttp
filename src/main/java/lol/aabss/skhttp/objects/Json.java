@@ -255,27 +255,15 @@ public class Json {
     }
 
     public Object get(String key) {
-        Object object = null;
+        JsonElement object = null;
         if (element instanceof JsonObject){
             object = ((JsonObject) element).get(key);
         }
-        if (object == null) return null;
-        if (object instanceof JsonObject){
-            if (((JsonObject) object).has("internal_class_name")) {
-                Class<?> clazz = null;
-                try {
-                    clazz = Class.forName(((JsonObject) object).get("internal_class_name").getAsString());
-                } catch (ClassNotFoundException e) {
-                    throw new RuntimeException(e);
-                }
-                return gson.fromJson((JsonObject) object, clazz);
-            }
-        }
-        return object;
+        return fromJsonElement(object);
     }
 
     public Object get(Integer index) {
-        Object object = null;
+        JsonElement object = null;
         try {
             if (element instanceof JsonObject) {
                 object = (((JsonObject) element).asMap().values().stream().toList().get(index));
@@ -285,19 +273,28 @@ public class Json {
         } catch (IndexOutOfBoundsException ignored){
             return null;
         }
-        if (object == null) return null;
-        if (object instanceof JsonObject){
-            if (((JsonObject) object).has("internal_class_name")) {
-                Class<?> clazz = null;
-                try {
-                    clazz = Class.forName(((JsonObject) object).get("internal_class_name").getAsString());
-                } catch (ClassNotFoundException e) {
-                    throw new RuntimeException(e);
-                }
-                return gson.fromJson((JsonObject) object, clazz);
+        return fromJsonElement(object);
+    }
+
+    public static Object fromJsonElement(JsonElement element){
+        if (element == null) return null;
+        if (element.isJsonNull()){
+            return null;
+        } else if (element.isJsonObject()){
+            return element.getAsJsonObject();
+        } else if (element.isJsonArray()){
+            return element.getAsJsonArray();
+        } else if (element.isJsonPrimitive()){
+            JsonPrimitive primitive = element.getAsJsonPrimitive();
+            if (primitive.isNumber()){
+                return primitive.getAsNumber();
+            } else if (primitive.isBoolean()){
+                return primitive.getAsBoolean();
+            } else if (primitive.isString()) {
+                return primitive.getAsString();
             }
         }
-        return object;
+        return null;
     }
 
     public static JsonElement toJsonElement(Object object, Event e){
