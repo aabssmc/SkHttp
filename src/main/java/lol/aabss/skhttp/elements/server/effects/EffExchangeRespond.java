@@ -84,6 +84,9 @@ public class EffExchangeRespond extends Effect {
         if (this.message instanceof UnparsedLiteral) {
             message = LiteralUtils.defendExpression(message);
         }
-        return LiteralUtils.canInitSafely(message);
+        if (this.message != null) {
+            return LiteralUtils.canInitSafely(message);
+        }
+        return true;
     }
 }

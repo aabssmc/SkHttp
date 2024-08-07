@@ -96,7 +96,10 @@ public class SecRequestBuilder extends Section {
         }
         if (exprs[0] instanceof Variable<?>){
             this.var = (Variable<?>) exprs[0];
-            return LiteralUtils.canInitSafely(body);
+            if (this.body != null) {
+                return LiteralUtils.canInitSafely(body);
+            }
+            return true;
         } else {
             Skript.error("The object expression must be a variable.");
             return false;

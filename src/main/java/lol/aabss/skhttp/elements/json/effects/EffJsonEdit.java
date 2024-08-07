@@ -117,7 +117,10 @@ public class EffJsonEdit extends Effect {
         if (this.value instanceof UnparsedLiteral) {
             value = LiteralUtils.defendExpression(value);
         }
-        return LiteralUtils.canInitSafely(value);
+        if (this.value != null) {
+            return LiteralUtils.canInitSafely(value);
+        }
+        return true;
     }
 }
 

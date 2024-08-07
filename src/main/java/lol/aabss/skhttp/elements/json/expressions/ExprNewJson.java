@@ -5,6 +5,7 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
+import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser;
@@ -83,6 +84,9 @@ public class ExprNewJson extends SimpleExpression<JsonElement> {
         if (this.object instanceof UnparsedLiteral) {
             object = LiteralUtils.defendExpression(object);
         }
-        return LiteralUtils.canInitSafely(object);
+        if (this.object != null) {
+            return LiteralUtils.canInitSafely(object);
+        }
+        return true;
     }
 }
