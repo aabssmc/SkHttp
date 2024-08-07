@@ -8,6 +8,8 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.UnparsedLiteral;
+import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
 import lol.aabss.skhttp.elements.server.sections.SecCreateEndpoint;
 import lol.aabss.skhttp.objects.server.HttpExchange;
@@ -79,6 +81,9 @@ public class EffExchangeRespond extends Effect {
         code = (Expression<Integer>) exprs[0];
         message = (Expression<Object>) exprs[1];
         exchange = (Expression<HttpExchange>) exprs[2];
-        return true;
+        if (this.message instanceof UnparsedLiteral) {
+            message = LiteralUtils.defendExpression(message);
+        }
+        return LiteralUtils.canInitSafely(message);
     }
 }

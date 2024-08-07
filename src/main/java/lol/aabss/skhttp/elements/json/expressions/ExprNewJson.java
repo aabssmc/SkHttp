@@ -8,7 +8,9 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.UnparsedLiteral;
 import ch.njol.skript.lang.util.SimpleExpression;
+import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -43,10 +45,6 @@ public class ExprNewJson extends SimpleExpression<JsonElement> {
     @Override
     protected JsonElement @NotNull [] get(@NotNull Event e) {
         if (object != null){
-            object = (Expression<Object>) object.getConvertedExpression(Object.class);
-            if (object == null){
-                return get(e);
-            }
             Object object;
             if (this.object.isSingle()) {
                 object = this.object.getSingle(e);
@@ -82,6 +80,9 @@ public class ExprNewJson extends SimpleExpression<JsonElement> {
     public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
         array = parseResult.hasTag("array");
         if (matchedPattern == 1) object = (Expression<Object>) exprs[0];
-        return true;
+        if (this.object instanceof UnparsedLiteral) {
+            object = LiteralUtils.defendExpression(object);
+        }
+        return LiteralUtils.canInitSafely(object);
     }
 }

@@ -8,6 +8,8 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.UnparsedLiteral;
+import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
 import lol.aabss.skhttp.objects.server.HttpContext;
 import lol.aabss.skhttp.objects.server.HttpServer;
@@ -56,6 +58,9 @@ public class EffRemoveServerEndpoint extends Effect {
     public boolean init(Expression<?>[] exprs, int matchedPattern, @NotNull Kleenean isDelayed, SkriptParser.@NotNull ParseResult parseResult) {
         endpoint = (Expression<Object>) exprs[0];
         server = (Expression<HttpServer>) exprs[1];
-        return true;
+        if (this.endpoint instanceof UnparsedLiteral) {
+            endpoint = LiteralUtils.defendExpression(endpoint);
+        }
+        return LiteralUtils.canInitSafely(endpoint);
     }
 }

@@ -9,6 +9,7 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.UnparsedLiteral;
+import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
 import com.google.gson.JsonElement;
 import lol.aabss.skhttp.objects.Json;
@@ -48,9 +49,6 @@ public class EffJsonEdit extends Effect {
     protected void execute(@NotNull Event e) {
         for (JsonElement element : json.getArray(e)){
             if (matchedPattern == 0){
-                if (this.value instanceof UnparsedLiteral){
-                    this.value = (Expression<Object>) this.value.getConvertedExpression(Object.class);
-                }
                 if (this.value == null){
                     return;
                 }
@@ -70,9 +68,6 @@ public class EffJsonEdit extends Effect {
                     json.add(key, value, e);
                 }
             } else if (matchedPattern == 1){
-                if (this.value instanceof UnparsedLiteral){
-                    this.value = (Expression<Object>) this.value.getConvertedExpression(Object.class);
-                }
                 if (this.value == null){
                     return;
                 }
@@ -119,7 +114,10 @@ public class EffJsonEdit extends Effect {
             index = (Expression<Integer>) exprs[0];
             json = (Expression<JsonElement>) exprs[1];
         }
-        return true;
+        if (this.value instanceof UnparsedLiteral) {
+            value = LiteralUtils.defendExpression(value);
+        }
+        return LiteralUtils.canInitSafely(value);
     }
 }
 

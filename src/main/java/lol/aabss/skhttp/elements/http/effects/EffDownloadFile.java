@@ -8,7 +8,9 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.UnparsedLiteral;
 import ch.njol.skript.util.AsyncEffect;
+import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
 import lol.aabss.skhttp.objects.RequestObject;
 import org.bukkit.event.Event;
@@ -81,6 +83,9 @@ public class EffDownloadFile extends AsyncEffect {
     public boolean init(Expression<?>[] exprs, int matchedPattern, @NotNull Kleenean isDelayed, SkriptParser.@NotNull ParseResult parseResult) {
         url = (Expression<Object>) exprs[0];
         path = (Expression<String>) exprs[1];
-        return true;
+        if (this.url instanceof UnparsedLiteral) {
+            url = LiteralUtils.defendExpression(url);
+        }
+        return LiteralUtils.canInitSafely(url);
     }
 }

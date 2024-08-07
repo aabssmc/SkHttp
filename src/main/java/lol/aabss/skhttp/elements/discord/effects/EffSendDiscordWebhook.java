@@ -7,7 +7,9 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.UnparsedLiteral;
 import ch.njol.skript.util.AsyncEffect;
+import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
 import com.itsradiix.discordwebhook.DiscordWebHook;
 import lol.aabss.skhttp.SkHttp;
@@ -69,6 +71,9 @@ public class EffSendDiscordWebhook extends AsyncEffect {
     public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, SkriptParser.@NotNull ParseResult parseResult) {
         text = (Expression<Object>) exprs[0];
         url = (Expression<String>) exprs[1];
-        return true;
+        if (this.text instanceof UnparsedLiteral) {
+            text = LiteralUtils.defendExpression(text);
+        }
+        return LiteralUtils.canInitSafely(text);
     }
 }

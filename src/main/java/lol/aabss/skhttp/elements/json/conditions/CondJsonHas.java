@@ -8,7 +8,9 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.UnparsedLiteral;
 import ch.njol.skript.registrations.Classes;
+import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
 import com.google.gson.JsonElement;
 import lol.aabss.skhttp.objects.Json;
@@ -69,6 +71,9 @@ public class CondJsonHas extends Condition {
         json = (Expression<JsonElement>) exprs[0];
         object = (Expression<Object>) exprs[1];
         key = parseResult.hasTag("key");
-        return true;
+        if (this.object instanceof UnparsedLiteral) {
+            object = LiteralUtils.defendExpression(object);
+        }
+        return LiteralUtils.canInitSafely(object);
     }
 }

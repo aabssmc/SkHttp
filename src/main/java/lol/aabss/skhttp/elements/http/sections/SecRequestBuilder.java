@@ -11,6 +11,7 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.*;
 import ch.njol.skript.registrations.Classes;
+import ch.njol.skript.util.LiteralUtils;
 import ch.njol.skript.util.Timespan;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
@@ -90,14 +91,17 @@ public class SecRequestBuilder extends Section {
         if (this.method == null) return false;
         this.body = (Expression<Object>) ENTRY_CONTAINER.getOptional("body", false);
         this.timeout = (Expression<Timespan>) ENTRY_CONTAINER.getOptional("timeout", false);
-
+        if (this.body instanceof UnparsedLiteral) {
+            this.body = LiteralUtils.defendExpression(body);
+        }
         if (exprs[0] instanceof Variable<?>){
             this.var = (Variable<?>) exprs[0];
-            return true;
+            return LiteralUtils.canInitSafely(body);
         } else {
             Skript.error("The object expression must be a variable.");
             return false;
         }
+
     }
 
     public void loadHeaders(SectionNode sectionNode, Event event) {
@@ -175,11 +179,6 @@ public class SecRequestBuilder extends Section {
                 default: request.method(method, publisher);
             }
         } else {
-            this.body = (Expression<Object>) this.body.getConvertedExpression(this.body.getReturnType());
-            if (this.body == null){
-                execute(e);
-                return;
-            }
             Object body = this.body.getSingle(e);
             if (body != null) {
                 request = HttpRequest.newBuilder()

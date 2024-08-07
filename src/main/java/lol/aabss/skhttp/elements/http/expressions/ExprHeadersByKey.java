@@ -8,7 +8,9 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.UnparsedLiteral;
 import ch.njol.skript.lang.util.SimpleExpression;
+import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
 import lol.aabss.skhttp.objects.server.HttpExchange;
 import org.bukkit.event.Event;
@@ -79,6 +81,9 @@ public class ExprHeadersByKey extends SimpleExpression<String> {
         object = (Expression<Object>) exprs[0];
         key = (Expression<String>) exprs[1];
         request = parseResult.hasTag("request");
-        return true;
+        if (this.object instanceof UnparsedLiteral) {
+            object = LiteralUtils.defendExpression(object);
+        }
+        return LiteralUtils.canInitSafely(object);
     }
 }
