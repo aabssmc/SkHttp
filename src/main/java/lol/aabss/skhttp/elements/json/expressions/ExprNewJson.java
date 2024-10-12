@@ -16,6 +16,7 @@ import ch.njol.util.Kleenean;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import lol.aabss.skhttp.SkHttp;
 import lol.aabss.skhttp.objects.Json;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
@@ -32,7 +33,7 @@ import org.jetbrains.annotations.Nullable;
 public class ExprNewJson extends SimpleExpression<JsonElement> {
 
     static {
-        if (Bukkit.getPluginManager().getPlugin("SkJson") == null) {
+        if (SkHttp.instance.getConfig().getBoolean("json-elements", true)) {
             Skript.registerExpression(ExprNewJson.class, JsonElement.class, ExpressionType.COMBINED,
                     "[a] [new] json[ ](object|:array)",
                     "json[[ ](object|array)] from [string|object] %objects%"

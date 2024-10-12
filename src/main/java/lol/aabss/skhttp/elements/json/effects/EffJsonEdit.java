@@ -12,6 +12,7 @@ import ch.njol.skript.lang.UnparsedLiteral;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
 import com.google.gson.JsonElement;
+import lol.aabss.skhttp.SkHttp;
 import lol.aabss.skhttp.objects.Json;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
@@ -29,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
 public class EffJsonEdit extends Effect {
 
     static {
-        if (Bukkit.getPluginManager().getPlugin("SkJson") == null) {
+        if (SkHttp.instance.getConfig().getBoolean("json-elements", true)) {
             Skript.registerEffect(EffJsonEdit.class,
                     "(put|add) [[key] %-string% [and]] [value] %object% in %jsonobjects/jsonarrays%",
                     "remove [:first|all] %object% in %jsonarrays/jsonobjects%",

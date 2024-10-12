@@ -11,6 +11,7 @@ import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.google.gson.JsonElement;
+import lol.aabss.skhttp.SkHttp;
 import lol.aabss.skhttp.objects.Json;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
@@ -32,7 +33,7 @@ import static lol.aabss.skhttp.SkHttp.instance;
 public class ExprGetJson extends SimpleExpression<Object> {
 
     static {
-        if (Bukkit.getPluginManager().getPlugin("SkJson") == null) {
+        if (SkHttp.instance.getConfig().getBoolean("json-elements", true)) {
             Skript.registerExpression(ExprGetJson.class, Object.class, ExpressionType.COMBINED,
                     "key %string% (from|of) [json[[ ](object|array)]] %jsonobjects/jsonarrays%",
                     "index %integer% (from|of) [json[[ ](object|array)]] %jsonobjects/jsonarrays%"

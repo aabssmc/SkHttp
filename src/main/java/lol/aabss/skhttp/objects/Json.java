@@ -8,6 +8,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import static lol.aabss.skhttp.SkHttp.SKRIPT_REFLECT_SUPPORTED;
 
@@ -258,6 +259,12 @@ public class Json {
         JsonElement object = null;
         if (element instanceof JsonObject){
             object = ((JsonObject) element).get(key);
+        } else if (element instanceof JsonArray) {
+            for (JsonElement elem : element.getAsJsonArray()) {
+                if (Objects.equals(Objects.toString(fromJsonElement(elem)), key)) {
+                    object = elem;
+                }
+            }
         }
         return fromJsonElement(object);
     }
@@ -298,7 +305,9 @@ public class Json {
     }
 
     public static JsonElement toJsonElement(Object object, Event e){
-        if (object instanceof Variable<?> && e != null){
+        if (object instanceof JsonElement) {
+            return (JsonElement) object;
+        } else if (object instanceof Variable<?> && e != null){
             if (((Variable<?>) object).isList()) {
                 List<?> list = Arrays.stream(((Variable<?>) object).getArray(e)).toList();
                 JsonArray array = new JsonArray();

@@ -6,6 +6,7 @@ import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import lol.aabss.skhttp.SkHttp;
 import lol.aabss.skhttp.objects.Json;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
@@ -15,7 +16,7 @@ import org.skriptlang.skript.lang.converter.Converters;
 
 public class Types {
     static {
-        if (Bukkit.getPluginManager().getPlugin("SkJson") == null) {
+        if (SkHttp.instance.getConfig().getBoolean("json-elements", true)) {
             if (Classes.getExactClassInfo(JsonObject.class) == null) {
                 Classes.registerClass(new ClassInfo<>(JsonObject.class, "jsonobject")
                         .name("Json Object")

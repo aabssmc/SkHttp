@@ -13,6 +13,7 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
 import com.google.gson.JsonElement;
+import lol.aabss.skhttp.SkHttp;
 import lol.aabss.skhttp.objects.Json;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
@@ -30,7 +31,7 @@ import org.jetbrains.annotations.Nullable;
 public class CondJsonHas extends Condition {
 
     static {
-        if (Bukkit.getPluginManager().getPlugin("SkJson") == null) {
+        if (SkHttp.instance.getConfig().getBoolean("json-elements", true)) {
             Skript.registerCondition(CondJsonHas.class,
                     "%jsonarrays/jsonobjects% (has|contains) (value|:key) %object%"
             );
