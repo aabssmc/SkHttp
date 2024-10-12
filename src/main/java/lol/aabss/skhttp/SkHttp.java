@@ -36,6 +36,7 @@ public final class SkHttp extends JavaPlugin {
     @Override
     public void onEnable() {
         if (Bukkit.getPluginManager().getPlugin("Skript") != null) {
+            instance = this;
             saveDefaultConfig();
             Metrics metrics = new Metrics(this, 21279);
             try {
@@ -44,7 +45,6 @@ public final class SkHttp extends JavaPlugin {
                 Skript.registerAddon(this)
                         .loadClasses("lol.aabss.skhttp", "elements");
                 metrics.addCustomChart(new Metrics.SimplePie("skript_version", () -> Skript.getVersion().toString()));
-                instance = this;
                 if (WEBSITE_FOLDER.mkdirs()) {
                     generateExampleSite();
                 }
