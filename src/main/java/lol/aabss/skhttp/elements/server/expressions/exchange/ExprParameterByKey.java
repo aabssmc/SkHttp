@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
 public class ExprParameterByKey extends SimpleExpression<Object> {
 
     static {
-        Skript.registerExpression(ExprExchangeAttribute.class, Object.class, ExpressionType.COMBINED,
+        Skript.registerExpression(ExprParameterByKey.class, Object.class, ExpressionType.COMBINED,
                 "(parameter|arg[ument]) of %httpexchange% (with|by|from) key %string%"
         );
     }

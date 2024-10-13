@@ -17,14 +17,14 @@ repositories {
 dependencies {
     implementation "org.jetbrains:annotations:24.0.0"
     implementation "com.github.SkriptLang:skript-reflect:2.4-dev1"
-    compileOnly "org.spigotmc:spigot-api:1.21-R0.1-SNAPSHOT"
+    compileOnly "org.spigotmc:spigot-api:1.21.1-R0.1-SNAPSHOT"
     implementation "com.github.SkriptLang:Skript:2.7.0"
-    implementation "com.github.ItsRadiiX:Discord-Webhooks:d83a19c4bc"
+    implementation "com.github.ItsRadiiX:Discord-Webhooks:3df5653b8b"
 }
 
 shadowJar {
     dependencies {
-        include(dependency("com.github.ItsRadiiX:Discord-Webhooks:d83a19c4bc"))
+        include(dependency("com.github.ItsRadiiX:Discord-Webhooks:3df5653b8b"))
     }
 }
 

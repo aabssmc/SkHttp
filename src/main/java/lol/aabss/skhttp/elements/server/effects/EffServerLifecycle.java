@@ -31,7 +31,7 @@ public class EffServerLifecycle extends Effect {
         Skript.registerEffect(EffServerLifecycle.class,
                 "start [http[ server]] %httpservers%",
                 "(stop|shut[ ]down) [http[ server]] %httpservers% [with delay %integer%]",
-                "close [http[ exchange]] %httpexchanges%"
+                "close http[ ]exchange %httpexchanges%"
         );
     }
 
