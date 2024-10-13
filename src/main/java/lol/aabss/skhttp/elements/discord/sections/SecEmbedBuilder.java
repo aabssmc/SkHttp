@@ -120,47 +120,47 @@ public class SecEmbedBuilder extends Section {
         if (url != null){
             String url = this.url.getSingle(e);
             if (url != null){
-                builder = builder.setUrl(url);
+                builder = builder.url(url);
             }
         }
         if (color != null){
             String color = this.color.getSingle(e);
             if (color != null){
-                builder = builder.setColor(color);
+                builder = builder.color(color);
             }
         }
         if (timestamp != null){
             String timestamp = this.timestamp.getSingle(e);
             if (timestamp != null) {
-                builder = builder.setTimestamp(timestamp);
+                builder = builder.timestamp(timestamp);
             }
         }
         if (footer != null){
             Footer footer = this.footer.getSingle(e);
             if (footer != null){
-                builder = builder.setFooter(footer);
+                builder = builder.footer(footer);
             }
         }
         if (thumbnail != null){
             String thumbnail = this.thumbnail.getSingle(e);
             if (thumbnail != null){
-                builder = builder.setThumbnail(new Thumbnail(thumbnail, null));
+                builder = builder.thumbnail(new Thumbnail(thumbnail, null));
             }
         }
         if (image != null){
             String image = this.image.getSingle(e);
             if (image != null){
-                builder = builder.setImage(new Image(image, null));
+                builder = builder.image(new Image(image, null));
             }
         }
         if (author != null){
             Author author = this.author.getSingle(e);
             if (author != null){
-                builder = builder.setAuthor(author);
+                builder = builder.author(author);
             }
         }
         if (fields != null){
-            builder = builder.setFields(Arrays.stream(fields.getArray(e)).toList());
+            builder = builder.fields(Arrays.stream(fields.getArray(e)).toList());
         }
         var.change(e, new Embed[]{builder}, Changer.ChangeMode.SET);
     }
