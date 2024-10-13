@@ -43,7 +43,8 @@ public final class SkHttp extends JavaPlugin {
                 getCommand("skhttp").setExecutor(this);
                 getCommand("skhttp").setTabCompleter(this);
                 Skript.registerAddon(this)
-                        .loadClasses("lol.aabss.skhttp", "elements");
+                        .loadClasses("lol.aabss.skhttp", "elements")
+                        .setLanguageFileDirectory("lang");
                 metrics.addCustomChart(new Metrics.SimplePie("skript_version", () -> Skript.getVersion().toString()));
                 if (WEBSITE_FOLDER.mkdirs()) {
                     generateExampleSite();

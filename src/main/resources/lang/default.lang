@@ -1,20 +1,20 @@
 version: 1.4
 
 types:
-    discordwebhook: discord ?webhook¦s @a
-    discordembed: discord ?embed¦s @a
-    discordfooter: discord ?footer¦s @a
-    discordauthor: discord ?author¦s @a
-    discordfield: discord ?field¦s @a
+    discordwebhook: discord webhook¦s @a
+    discordembed: discord embed¦s @a
+    discordfooter: discord footer¦s @a
+    discordauthor: discord author¦s @a
+    discordfield: discord field¦s @a
 
-    httpclient: http ?client¦s @an
-    httprequest: http ?request¦s @an
-    httpresponse: http ?resposne¦s @a
+    httpclient: http client¦s @an
+    httprequest: http request¦s @an
+    httpresponse: http resposne¦s @a
 
-    httpcontext: http ?context¦s @a
-    httpexchange: http ?exchange¦s @an
-    httphandler: http ?handler¦s @an
-    httpserver: http ?server¦s @a
+    httpcontext: http context¦s @a
+    httpexchange: http exchange¦s @an
+    httphandler: http handler¦s @an
+    httpserver: http server¦s @a
 
-    jsonobject: json ?object¦s @a
-    jsonarray: json ?array¦s @a
+    jsonobject: json object¦s @a
+    jsonarray: json array¦s @a
