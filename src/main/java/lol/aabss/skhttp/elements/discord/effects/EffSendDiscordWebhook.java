@@ -45,18 +45,9 @@ public class EffSendDiscordWebhook extends AsyncEffect {
                 Object text = this.text.getSingle(e);
                 if (text instanceof String t) {
                     DiscordWebHook message = new DiscordWebHook().content(t);
-                    try (CloseableHttpResponse response = message.sendToDiscord(url)) {
-                        SkHttp.LOGGER.log(response.getCode());
-                    } catch (IOException x){
-                        throw new RuntimeException(x);
-                    }
                     message.sendToDiscord(url);
                 } else if (text instanceof DiscordWebHook t){
-                     try (CloseableHttpResponse response = t.sendToDiscord(url)) {
-                         SkHttp.LOGGER.log(response.getCode());
-                     } catch (IOException x){
-                        throw new RuntimeException(x);
-                     }
+                    t.sendToDiscord(url);
                 }
             }
         }

@@ -47,7 +47,7 @@ public class SecWebhookBuilder extends Section {
         ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("content", null, false, String.class));
         ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("username", null, true, String.class));
         ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("avatar", null, true, String.class));
-        ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("embed", null, true, Embed.class));
+        ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("embed", null, true, Embed[].class));
         ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("variable", null, false, Object.class));
     }
 
@@ -98,10 +98,7 @@ public class SecWebhookBuilder extends Section {
             }
         }
         if (embed != null){
-            Embed embed = this.embed.getSingle(e);
-            if (embed != null){
-                builder = builder.addEmbeds(embed);
-            }
+            builder.addEmbeds(this.embed.getArray(e));
         }
         var.change(e, new DiscordWebHook[]{builder}, Changer.ChangeMode.SET);
     }
