@@ -1,10 +1,12 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
 plugins {
     id "java"
     id "com.github.johnrengelman.shadow" version "8.1.1"
 }
 
 group = "lol.aabss"
-version = "1.4"
+version = "1.5"
 
 repositories {
     mavenCentral()
@@ -44,8 +46,14 @@ processResources {
     filesMatching("plugin.yml") {
         expand props
     }
+    filesMatching("lang/default.lang") {
+        expand props
+    }
     from ("lang") {
         include "**/*"
         into "lang/"
+    }
+    filesNotMatching("**/*.png") {
+        filter ReplaceTokens, tokens: ["version": project.version]
     }
 }

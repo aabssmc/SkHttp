@@ -1,4 +1,4 @@
-version: 1.4
+version: @version@
 
 types:
     discordwebhook: discord webhook¦s @a
